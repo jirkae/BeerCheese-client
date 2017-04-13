@@ -1,0 +1,35 @@
+{
+  "name": "BeerCheese",
+  "version": "0.1.0",
+  "main": "node_modules/react-scripts/scripts/start.js",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.9.5"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "bootstrap": "4.0.0-alpha.6",
+    "glamor": "^2.20.24",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-addons-transition-group": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-fontawesome": "^1.5.0",
+    "react-lazyload": "^2.2.5",
+    "react-localization": "^0.0.13",
+    "react-redux": "^5.x.x",
+    "react-router": "^3.x.x",
+    "reactstrap": "^4.3.0",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
