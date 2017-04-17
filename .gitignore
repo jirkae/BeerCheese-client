@@ -1,9 +1,7 @@
 .idea
-*.iml
 target
 
 node_modules
-coverage
 build/
 static/
 
