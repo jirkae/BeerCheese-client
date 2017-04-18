@@ -16,5 +16,8 @@ deployment:
     branch: master
     commands:
       - yarn global add firebase-tools
+      - cd functions
+      - yarn
+      - cd ..
       - yarn run build
       - firebase deploy --token "$FIREBASE_TOKEN" --non-interactive
