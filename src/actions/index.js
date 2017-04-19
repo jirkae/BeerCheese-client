@@ -2,6 +2,7 @@ import { getCurrentUser } from './currentUser';
 import { productsApi } from './products';
 import { openModal, hideModals } from './openModal';
 import { login, logout } from './auth';
+import { addProduct } from './configurator';
 
 /**
  Following is a list of functions which can be connected to react components
@@ -28,4 +29,4 @@ import { login, logout } from './auth';
  }
  */
 
-export { getCurrentUser, productsApi, openModal, hideModals, login, logout };
+export { getCurrentUser, productsApi, openModal, hideModals, login, logout, addProduct };

@@ -1,19 +1,24 @@
 import React from 'react';
 import { Card, CardBlock, CardFooter, Row, Col, Input, Label, Button } from 'reactstrap';
+import { connect } from 'react-redux';
 
-const preview = (props) => (
+const Preview = ( {products} ) => (
     <Card>
         <CardBlock>
             <Row>
-                <Card>
-                    <CardBlock>
-                        Pivo
-                    </CardBlock>
-                    <img width={130} src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="product" />
-                    <CardBlock>
-                        <Button size="sm">Odebrat</Button>
-                    </CardBlock>
-                </Card> 
+                {products.forEach((item) => {
+                    return (
+                        <Card>
+                            <CardBlock>
+                                Pivo
+                            </CardBlock>
+                            <img width={130} src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="product" />
+                            <CardBlock>
+                                <Button size="sm">Odebrat</Button>
+                            </CardBlock>
+                        </Card> 
+                    );
+                })}
             </Row>
         </CardBlock>
         <CardFooter style={{background: 'none'}}>
@@ -39,4 +44,11 @@ const preview = (props) => (
     </Card>
 )
 
-export default preview;
+const mapSateToProps = state => ({
+  products: state.configurator.products
+});
+
+
+export default connect(mapSateToProps, {
+
+})(Preview);

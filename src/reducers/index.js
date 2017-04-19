@@ -6,6 +6,7 @@ export const MODAL = 'MODAL';
 export const USER = 'USER';
 export const PRODUCTS = 'PRODUCTS';
 export const PACKAGES = 'PACKAGES';
+export const CONFIGURATOR = 'CONFIGURATOR';
 
 const openModalInitialState = {
   name: null,
@@ -35,6 +36,10 @@ const productsInitialState = {
   error: null
 };
 
+const configuratorInitialState = {
+  products: [],
+};
+
 const reducer = (initialState, type) => {
   return (state = initialState, action = {}) => {
     if (action.type === type && isFunction(action.reducer)) {
@@ -50,5 +55,6 @@ export const rootReducer = combineReducers({
   openModal: reducer(openModalInitialState, MODAL),
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),
-  packages: reducer(packagesInitialState, PACKAGES)
+  packages: reducer(packagesInitialState, PACKAGES),
+  configurator: reducer(configuratorInitialState, CONFIGURATOR)
 });
