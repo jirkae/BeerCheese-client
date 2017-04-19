@@ -6,13 +6,7 @@ import localizedTexts from '../../text_localization/LocalizedStrings';
 
 class LoginModal extends React.Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      errors: {}
-    };
-  };
+  state = { errors: {} };
 
   handleLogin = event => {
     event.preventDefault();
