@@ -1,3 +1,8 @@
+general:
+  branches:
+    only:
+      - master
+
 machine:
   node:
     version: 6.10.0
@@ -9,6 +14,10 @@ dependencies:
     - yarn install
   cache_directories:
     - ~/.cache/yarn
+
+test:
+  override:
+  - "true"
 
 # kb.imakewebsites.ca/2016/02/28/deploying-apps-from-circleci-to-firebase-hosting
 deployment:
