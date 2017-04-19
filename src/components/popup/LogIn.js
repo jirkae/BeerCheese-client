@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 
-class loginModal extends React.Component {
+class LoginModal extends React.Component {
 
   handleLogin = event => {
     event.preventDefault();
@@ -61,4 +61,4 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   login
-})(loginModal);
+})(LoginModal);
