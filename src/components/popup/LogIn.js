@@ -6,8 +6,6 @@ import localizedTexts from '../../text_localization/LocalizedStrings';
 
 class loginModal extends React.Component {
 
-  state = { errors: {} };
-
   handleLogin = event => {
     event.preventDefault();
 
@@ -50,7 +48,7 @@ class loginModal extends React.Component {
             <Button type="submit">{localizedTexts.logIn.btnSignIn}</Button>
           </Form>
           {auth.isFetching && <p>{localizedTexts.logIn.waiting}</p>}
-          {auth.err && <p color="warning">{localizedTexts.logIn.error}: {JSON.stringify(auth.err)}</p>}
+          {auth.err && <p color="warning">{localizedTexts.logIn.error} + ": " + {JSON.stringify(auth.err)}</p>}
         </ModalBody>
       </Modal>
     );
