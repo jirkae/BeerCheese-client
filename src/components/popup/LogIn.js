@@ -6,6 +6,14 @@ import localizedTexts from '../../text_localization/LocalizedStrings';
 
 class LoginModal extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errors: {}
+    };
+  };
+
   handleLogin = event => {
     event.preventDefault();
 
@@ -39,11 +47,11 @@ class LoginModal extends React.Component {
           <Form onSubmit={this.handleLogin}>
             <FormGroup>
               <Label for="username">{localizedTexts.logIn.name}</Label>
-              <Input type="text" name="username" id="username" placeholder="{localizedTexts.logIn.name}" value={this.state.username} onChange={this.updateUsernameValue} />
+              <Input type="text" name="username" id="username" value={this.state.username} onChange={this.updateUsernameValue} />
             </FormGroup>
             <FormGroup>
               <Label for="password">{localizedTexts.logIn.pass}</Label>
-              <Input type="password" name="password" id="password" placeholder="{localizedTexts.logIn.pass}" value={this.state.password} onChange={this.updatePasswordValue} />
+              <Input type="password" name="password" id="password" value={this.state.password} onChange={this.updatePasswordValue} />
             </FormGroup>
             <Button type="submit">{localizedTexts.logIn.btnSignIn}</Button>
           </Form>
