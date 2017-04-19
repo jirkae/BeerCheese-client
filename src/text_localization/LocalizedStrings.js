@@ -89,7 +89,9 @@ export default new LocalizedStrings({
       next: 'Další'
     },
     Product: {
-      btnAddToChart: 'Přidat do košíku'
+      btnAddToPackage: 'Přidat do balíčku',
+      price: 'Cena',
+      priceAfterDiscount: 'Cena po slevě'
     },
     AdminCustomersPage: {
       id: 'ID',

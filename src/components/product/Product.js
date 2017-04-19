@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardBlock, CardTitle, CardSubtitle, CardLink } from 'reactstrap';
-import localizedTexts from '../../text_localization/LocalizedStrings';
+import { Card, CardBlock, CardTitle, CardSubtitle } from 'reactstrap';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/openModal';
 
@@ -9,7 +8,7 @@ const Product = ({ product, openModal, size }) => (
     onClick={() => {
       openModal({ name: 'productDetails', data: product });
     }}
-    style={{margin: '0 25px 25px 0'}}
+    style={{ margin: '0 25px 25px 0' }}
   >
     <CardBlock>
       <CardTitle>{product.name}</CardTitle>
@@ -20,12 +19,12 @@ const Product = ({ product, openModal, size }) => (
       alt="product"
     />
     <CardBlock>
-      <CardSubtitle>{product.priceAfterDiscount}</CardSubtitle>
-      <CardLink href="#">{localizedTexts.Product.btnAddToChart}</CardLink>
+      <CardSubtitle>
+        {product.priceAfterDiscount || product.price} Kč
+      </CardSubtitle>
     </CardBlock>
   </Card>
 );
-
 
 export default connect(null, {
   openModal
