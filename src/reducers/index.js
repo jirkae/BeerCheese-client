@@ -5,7 +5,7 @@ export const AUTH = 'AUTH';
 export const MODAL = 'MODAL';
 export const USER = 'USER';
 export const PRODUCTS = 'PRODUCTS';
-export const PACKAGES = 'PACKAGES';
+export const CART = 'CART';
 
 const openModalInitialState = {
   name: null,
@@ -23,10 +23,26 @@ const userInitialState = {
   error: null
 };
 
-const packagesInitialState = {
-  isFetching: false,
-  packages: null,
-  error: null
+/*
+ Cart contains:
+  - packages (array of packages)
+  - shippingAddress
+  - shipping
+  - status
+  - paymentType
+  - shipping
+  - shippingAddress
+  - billingAddress
+  - discount
+  - price
+ */
+const cartInitialState = () => {
+  const cart = localStorage.getItem(CART)
+    ? JSON.parse(localStorage.getItem(CART))
+    : { packages: [{}] };
+  return {
+    ...cart
+  };
 };
 
 const productsInitialState = {
@@ -50,5 +66,5 @@ export const rootReducer = combineReducers({
   openModal: reducer(openModalInitialState, MODAL),
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),
-  packages: reducer(packagesInitialState, PACKAGES)
+  cart: reducer(cartInitialState, CART)
 });

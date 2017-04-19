@@ -1,8 +1,3 @@
-import { getCurrentUser } from './currentUser';
-import { productsApi } from './products';
-import { openModal, hideModals } from './openModal';
-import { login, logout } from './auth';
-
 /**
  Following is a list of functions which can be connected to react components
  To connect an action to component props, export that component as export connect(`here goes mapStateToProps`, {userApi, login, ...})(componentName)
@@ -27,5 +22,18 @@ import { login, logout } from './auth';
   },
  }
  */
+import { getCurrentUser } from './currentUser';
+import { productsApi } from './products';
+import { openModal, hideModals } from './openModal';
+import { login, logout } from './auth';
+import { updateCart } from './cart';
 
-export { getCurrentUser, productsApi, openModal, hideModals, login, logout };
+export {
+  getCurrentUser,
+  productsApi,
+  openModal,
+  hideModals,
+  login,
+  logout,
+  updateCart
+};
