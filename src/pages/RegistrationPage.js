@@ -1,10 +1,12 @@
 import React from 'react';
 import { Col,Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { browserHistory} from 'react-router';
+import { connect } from 'react-redux';
 import localizedTexts from '../text_localization/LocalizedStrings';
 import api from '../api.js';
-import { browserHistory} from 'react-router';
+import { openModal } from '../actions/openModal';
 
-export default class RegistrationPage extends React.Component {
+class RegistrationPage extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -38,6 +40,13 @@ export default class RegistrationPage extends React.Component {
 
       }).then(response => {
             browserHistory.push('/');
+            this.props.openModal({
+              name: 'alert',
+              data: {
+                type: "success",
+                message: localizedTexts.registration.registrationSuccess
+              }
+            });
       }).catch(function(response) {
           console.log('error');
       });
@@ -119,3 +128,8 @@ export default class RegistrationPage extends React.Component {
   }
 
 }
+
+
+export default connect(null, {
+  openModal
+})(RegistrationPage);

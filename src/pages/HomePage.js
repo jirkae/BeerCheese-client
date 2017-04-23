@@ -9,7 +9,6 @@ import {
   NavbarBrand
 } from 'reactstrap';
 import ProductList from '../components/product/ProductList';
-import WelcomeWarningPopUp from '../components/popup/WelcomeWarningPopUp';
 import localizedTexts from '../text_localization/LocalizedStrings';
 import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router';
@@ -48,7 +47,6 @@ export default class HomePage extends Component {
   render() {
     return (
       <Row>
-        <WelcomeWarningPopUp />
         <Col xl="3" lg="3" md="4" sm="12" xs="12">
           <Nav pills vertical>
             <NavbarBrand>{localizedTexts.HomePage.categories}</NavbarBrand>

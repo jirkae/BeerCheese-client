@@ -143,7 +143,8 @@ export default new LocalizedStrings({
       email: 'E-Mail',
       question: 'Bezpečnostní otázka',
       answer: 'Bezpečnostní odpověď',
-      register: 'Registrovat'
+      register: 'Registrovat',
+      registrationSuccess: 'Registrace úspěšně dokončena.'
     },
     categories: {
       black: 'Černé',
