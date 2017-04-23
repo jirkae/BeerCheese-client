@@ -9,6 +9,7 @@ import NewSupplierAdmin from '../popup/NewSupplierAdmin';
 import EditSupplierAdmin from '../popup/EditSupplierAdmin';
 import EditOrderAdmin from '../popup/EditOrderAdmin';
 import LogIn from '../popup/LogIn';
+import Alert from '../popup/Alert';
 
 const Modals = (props) => {
   return(
@@ -20,6 +21,7 @@ const Modals = (props) => {
       {props.openModal.name === 'newSupplierAdmin' ? <NewSupplierAdmin hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editSupplierAdmin' ? <EditSupplierAdmin data={props.openModal.data} hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editOrderAdmin' ? <EditOrderAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
+      {props.openModal.name === 'alert' ? <Alert data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'logIn' ? <LogIn hideModals={props.hideModals}/> : ''}
     </div>
   );

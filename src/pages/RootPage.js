@@ -4,6 +4,7 @@ import NavBar from '../components/navigation/NavBar';
 import LoginRegisterNav from '../components/navigation/LoginRegisterNav';
 import Footer from '../components/navigation/Footer';
 import Modals from '../components/navigation/Modals';
+import WelcomeWarningPopUp from '../components/popup/WelcomeWarningPopUp';
 import { css } from 'glamor';
 import { getCurrentUser } from '../actions/currentUser';
 import { connect } from 'react-redux';
@@ -18,12 +19,23 @@ class RootPage extends React.Component {
     this.props.getCurrentUser();
   }
 
+  displayWelcomePopUpOnFirstLoad = () => {
+    const welcomeDisplayed = 'welcomeDisplayed';
+    if(sessionStorage.getItem(welcomeDisplayed)) {
+      return null;
+    }else {
+      sessionStorage.setItem(welcomeDisplayed, true);
+      return <WelcomeWarningPopUp />;
+    }
+  };
+
   render() {
     return (
       <div>
         <Container fluid>
           <LoginRegisterNav />
         </Container>
+        { this.displayWelcomePopUpOnFirstLoad() }
         <Container fluid style={{background: '#cfcfcf'}}>
           <NavBar />
         </Container>
