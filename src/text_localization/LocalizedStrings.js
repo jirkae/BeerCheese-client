@@ -135,6 +135,7 @@ export default new LocalizedStrings({
       title: 'Registrace',
       username: 'Uživatelské jméno',
       password: 'Heslo',
+      verifyPassword: 'Znovu heslo',
       firstname: 'Jméno',
       lastname: 'Přijmení',
       birthdate: 'Datum narození',
