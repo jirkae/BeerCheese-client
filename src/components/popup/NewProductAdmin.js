@@ -4,7 +4,7 @@ import {
   Label, Input, Button, Col, InputGroupAddon, InputGroup,
 } from 'reactstrap';
 
-import api, { imageApi } from '../../api';
+import api from '../../api';
 
 export default class NewProductAdmin extends React.Component {
 
@@ -75,29 +75,12 @@ export default class NewProductAdmin extends React.Component {
     event.preventDefault();
     api.post('products', this.buildNewProductParams())
       .then(response => {
-        // TODO this.uploadProductImage(response.data.product, formData)
         console.log("response", response);
       })
       .catch(response => {
         console.log('error creating product ', response);
       });
   };
-
-  // použiju později
-  /*uploadProductImage = (newProduct, formData) => {
-    let config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-    imageApi.post(newProduct.image, formData.get("image"), config)
-      .then(() => {
-        this.props.hideModals();
-      })
-      .catch(response => {
-        console.log('error uploading image ', response);
-      });
-  };*/
 
   buildNewProductParams = () => {
     return {
