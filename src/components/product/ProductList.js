@@ -10,7 +10,22 @@ import { isNull } from '../../util/util';
 class ProductList extends Component {
   componentWillMount() {
     // get products
-    this.props.productsApi();
+    this.fetchItems(this.props.categoryId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // get products
+    if (nextProps.categoryId !== this.props.categoryId) {
+      this.fetchItems(nextProps.categoryId);
+    }
+  }
+
+  fetchItems(categoryId) {
+    let config = {};
+    if (typeof categoryId !== 'undefined' && !isNull(categoryId)) {
+      config = {params: {category: categoryId}};
+    }
+    this.props.productsApi(config);
   }
 
   renderProducts() {

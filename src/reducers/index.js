@@ -5,6 +5,7 @@ export const AUTH = 'AUTH';
 export const MODAL = 'MODAL';
 export const USER = 'USER';
 export const PRODUCTS = 'PRODUCTS';
+export const CATEGORIES = 'CATEGORIES';
 export const CART = 'CART';
 
 const openModalInitialState = {
@@ -51,6 +52,14 @@ const productsInitialState = {
   error: null
 };
 
+const categoriesInitialState = {
+  isFetching: false,
+  categories: null,
+  subcategories: null,
+  error: null
+};
+
+
 const reducer = (initialState, type) => {
   return (state = initialState, action = {}) => {
     if (action.type === type && isFunction(action.reducer)) {
@@ -66,5 +75,6 @@ export const rootReducer = combineReducers({
   openModal: reducer(openModalInitialState, MODAL),
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),
+  categories: reducer(categoriesInitialState, CATEGORIES),
   cart: reducer(cartInitialState, CART)
 });
