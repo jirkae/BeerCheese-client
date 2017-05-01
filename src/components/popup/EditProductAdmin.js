@@ -6,16 +6,23 @@ import {
 
 import api from '../../api';
 
+const CATEGORIES_URL = '/api/categories/';
+const SUPPLIERS_URL = '/api/suppliers/';
+
 export default class EditProductAdmin extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      categories: [],
-      subCategories: [],
-      suppliers: []
-    };
-  }
+  state = {
+    categories: [],
+    subCategories: [],
+    suppliers: [],
+    name: this.props.data.name,
+    price: this.props.data.price,
+    priceAfterDiscount: this.props.data.priceAfterDiscount,
+    quantity: this.props.data.quantity,
+    description: this.props.data.description || "",
+    category: this.props.data.category.replace(CATEGORIES_URL,''),
+    supplier: this.props.data.supplier.replace(SUPPLIERS_URL,'')
+  };
 
   componentDidMount() {
     this.loadSuppliers();
@@ -25,9 +32,21 @@ export default class EditProductAdmin extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    api.put('products/' + this.props.data.id, new FormData(event.target))
-      .then(data => {
-        console.log('success ', data);
+    let data = {
+      product: {
+        name: this.state.name,
+        price: this.state.price,
+        priceAfterDiscount: this.state.priceAfterDiscount,
+        quantity: this.state.quantity,
+        description: this.state.description || "",
+        category: CATEGORIES_URL + this.state.category,
+        supplier: SUPPLIERS_URL + this.state.supplier
+      }
+    };
+    console.log("category", data);
+    api.put('products/' + this.props.data.id, data)
+      .then(() => {
+        this.props.hideModals();
       })
       .catch(response => {
         console.log('error ', response);
@@ -84,6 +103,7 @@ export default class EditProductAdmin extends React.Component {
 
   onCategoryChosen = (event) => {
     this.loadSubCategories(event.target.value);
+    this.onInputChange(event);
   };
 
   renderCategoryOptions = () => {
@@ -110,6 +130,12 @@ export default class EditProductAdmin extends React.Component {
     });
   };
 
+  onInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  };
+
   render() {
     return (
       <Modal isOpen={true} toggle={this.props.hideModals}>
@@ -121,51 +147,54 @@ export default class EditProductAdmin extends React.Component {
               <Form onSubmit={this.onSubmit}>
 
                 <FormGroup row>
-                  <Label for="productName" sm={4}>Název</Label>
+                  <Label for="name" sm={4}>Název</Label>
                   <Col sm={8}>
                     <Input defaultValue={this.props.data.name}
-                           required type="text" name="productName" id="productName"/>
+                           required type="text" name="name" id="name"/>
                   </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productPrice" sm={4}>Cena</Label>
+                  <Label for="price" sm={4}>Cena</Label>
                   <Col sm={8}>
                     <InputGroup>
                       <Input defaultValue={this.props.data.price}
-                             required type="number" name="productPrice" id="productPrice"/>
+                             onChange={this.onInputChange}
+                             required type="number" name="price" id="price"/>
                       <InputGroupAddon>Kč</InputGroupAddon>
                     </InputGroup>
                   </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productPriceAfterDiscount" sm={4}>Cena po slevě</Label>
+                  <Label for="priceAfterDiscount" sm={4}>Cena po slevě</Label>
                   <Col sm={8}>
                     <InputGroup>
                       <Input defaultValue={this.props.data.priceAfterDiscount}
-                             type="number" name="productPriceAfterDiscount" id="productPriceAfterDiscount"/>
+                             onChange={this.onInputChange}
+                             type="number" name="priceAfterDiscount" id="priceAfterDiscount"/>
                       <InputGroupAddon>Kč</InputGroupAddon>
                     </InputGroup>
                   </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productQuantity" sm={4}>Skladem</Label>
+                  <Label for="quantity" sm={4}>Skladem</Label>
                   <Col sm={8}>
                     <InputGroup>
                       <Input defaultValue={this.props.data.quantity}
-                             type="number" name="productQuantity" id="productQuantity"/>
+                             onChange={this.onInputChange}
+                             type="number" name="quantity" id="quantity"/>
                       <InputGroupAddon>Ks</InputGroupAddon>
                     </InputGroup>
                   </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productCategory" sm={4}>Kategorie</Label>
+                  <Label for="category" sm={4}>Kategorie</Label>
                   <Col sm={8}>
-                    <Input onChange={this.onCategoryChosen} required type="select" name="productCategory"
-                           id="productCategory">
+                    <Input onChange={this.onCategoryChosen} required type="select" name="category"
+                           id="category">
                       {this.renderCategoryOptions()}
                     </Input>
                   </Col>
@@ -182,19 +211,20 @@ export default class EditProductAdmin extends React.Component {
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productSupplier" sm={4}>Dodavatel</Label>
+                  <Label for="supplier" sm={4}>Dodavatel</Label>
                   <Col sm={8}>
-                    <Input type="select" name="productSupplier" id="productSupplier">
+                    <Input type="select" name="supplier" id="supplier">
                       {this.renderSupplierOptions()}
                     </Input>
                   </Col>
                 </FormGroup>
 
                 <FormGroup row>
-                  <Label for="productDesc" sm={4}>Popis</Label>
+                  <Label for="description" sm={4}>Popis</Label>
                   <Col sm={8}>
                     <Input defaultValue={this.props.data.description}
-                           type="textarea" name="productDesc" id="productDesc"/>
+                           onChange={this.onInputChange}
+                           type="textarea" name="description" id="description"/>
                   </Col>
                 </FormGroup>
 
