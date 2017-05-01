@@ -43,7 +43,6 @@ export default class EditProductAdmin extends React.Component {
         supplier: SUPPLIERS_URL + this.state.supplier
       }
     };
-    console.log("category", data);
     api.put('products/' + this.props.data.id, data)
       .then(() => {
         this.props.hideModals();
