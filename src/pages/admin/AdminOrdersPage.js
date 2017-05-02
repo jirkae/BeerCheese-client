@@ -14,7 +14,7 @@ class AdminOrdersPage extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     api.get('orders')
       .then(response => {
         if (response) {
