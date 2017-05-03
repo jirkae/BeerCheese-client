@@ -16,6 +16,12 @@ class PackageOverviewDelPayPage extends Component {
     this.props.updateCart(newCart);
   }
 
+  handlePaymentChange(paymentType) {
+    let newCart = Object.assign({}, this.props.cart);
+    newCart.paymentType = paymentType;
+    this.props.updateCart(newCart);
+  }
+
   renderShippingOptions() {
     const {shippings, cart} = this.props;
     if (shippings.shippings.length === 0) {
@@ -39,12 +45,15 @@ class PackageOverviewDelPayPage extends Component {
   render() {
 
     function makeOptions(name, options) {
+      const {cart} = this.props;
       let items = [];
       options.forEach(function (data) {
         items.push(
           <Row key={name + '-' + data.value}>
             <Col xs={8}>
-              <label><input type="radio" name={name} value={data.value} /> {data.label}</label>
+              <label><input type="radio" name={name} value={data.value} 
+              onChange={(e) => {this.handlePaymentChange(data.value)}} 
+              checked={cart !== undefined && cart.paymentType !== undefined && cart.paymentType === data.value} /> {data.label}</label>
             </Col>
             <Col xs={4} className="text-right">{data.price}</Col>
           </Row>
@@ -56,8 +65,10 @@ class PackageOverviewDelPayPage extends Component {
 
     function makePaymentOptions() {
       var options = [
-        { label: 'Dobírka', value: 'cod', price: 55 },
-        { label: 'Platební karta', value: 'card', price: 0 },
+        { label: 'Platební karta', value: 1, price: 55 },
+        { label: 'PayPal', value: 2, price: 0 },
+        { label: 'Bankovní převod', value: 3, price: 0 },
+        { label: 'Dobírka', value: 4, price: 0 },
       ];
 
       return makeOptions('payment', options);
