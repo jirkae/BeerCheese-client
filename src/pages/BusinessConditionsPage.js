@@ -5,17 +5,13 @@ export default class BusinessConditionsPage extends React.Component {
     return (
       <div>
         <h1>Kontaktní údaje prodávajícího</h1>
-        <p>
-          Název:<br />
-          Sídlo/bydliště:<br />
-          IČ:<br />
-          Zapsaná:<br />
-          Telefon:<br />
-          Email:<br />
-          Kontaktní adresa:<br />
-          Seznam provozoven:<br />
-          Provozní doba:<br />
-        </p>
+
+        <p>Sídlo/bydliště: Václavské náměstí 12, 120 00, Praha 1</p>
+        <p>Telefon: 222 234 234</p>
+        <p>Email: info@chcipivo.cz</p>
+        <p>Kontaktní adresa: Václavské náměstí 12, 120 00, Praha 1</p>
+        <p>Seznam provozoven: Václavské náměstí 12, 120 00, Praha 1</p>
+        <p>Provozní doba: PO-NE 8:00 - 18:00</p>
 
         <h1>Informace</h1>
         <p>

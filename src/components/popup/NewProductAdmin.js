@@ -4,7 +4,9 @@ import {
   Label, Input, Button, Col, InputGroupAddon, InputGroup,
 } from 'reactstrap';
 
-import api from '../../api';
+import api, { imageApi } from '../../api';
+
+const IMAGE_BOUNDARY = '--------------------imageboundary';
 
 export default class NewProductAdmin extends React.Component {
 
@@ -75,10 +77,30 @@ export default class NewProductAdmin extends React.Component {
     event.preventDefault();
     api.post('products', this.buildNewProductParams())
       .then(response => {
-        console.log("response", response);
+        let imageUrl = response.data.product.image;
+        this.uploadImage(imageUrl);
       })
       .catch(response => {
         console.log('error creating product ', response);
+      });
+  };
+
+  uploadImage = (url) => {
+    let headers = {
+      headers: {'Content-Type': 'multipart/form-data; boundary=' + IMAGE_BOUNDARY}
+    };
+    let body = IMAGE_BOUNDARY +
+      '\r\nContent-Disposition: form-data; name="image"; filename="image.jpg"' +
+      '\r\nContent-Type: image/jpeg\r\n\r\n' +
+      this.state.image +
+      '\r\n' + IMAGE_BOUNDARY + '\r\n';
+
+    imageApi.post(url, body, headers)
+      .then(() => {
+        this.props.hideModals();
+      })
+      .catch(error => {
+        console.log('error uploading image ', error);
       });
   };
 

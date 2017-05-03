@@ -3,7 +3,7 @@ import { isNull } from './util/util';
 
 export const APP_URL = 'https://beer-jansyk13.rhcloud.com/';
 const BASE_URL = 'https://beer-jansyk13.rhcloud.com/api';
-const IMAGES_URL = 'https://beer-jansyk13.rhcloud.com/images';
+const IMAGES_URL = 'https://beer-jansyk13.rhcloud.com';
 
 //include auth token to each request if exists
 const authInterceptor = config => {
