@@ -13,7 +13,7 @@ import localizedTexts from '../text_localization/LocalizedStrings';
 import FontAwesome from 'react-fontawesome';
 import { categoriesApi } from '../actions/categories';
 import { Link } from 'react-router';
-import Loading from "../components/images/Loading";
+import Loading from '../components/images/Loading';
 import { connect } from 'react-redux';
 
 class HomePage extends Component {
@@ -29,17 +29,20 @@ class HomePage extends Component {
   renderSubNav(parent) {
     const categories = this.props.categories;
     const expandedCategory = this.state.expandedCategory;
-    return categories.categories.map((category) => {
+    return categories.categories.map(category => {
       category = category.category;
-      if (category.mainCategory === parent.links.self && expandedCategory !== null && expandedCategory.id === parent.id) {
-          return (<NavItem key={category.id} style={{marginLeft: '20px'}}>
-            <NavLink
-              tag={Link}
-              to={'/?category='+category.id}
-            >
+      if (
+        category.mainCategory === parent.links.self &&
+        expandedCategory !== null &&
+        expandedCategory.id === parent.id
+      ) {
+        return (
+          <NavItem key={category.id} style={{ marginLeft: '20px' }}>
+            <NavLink tag={Link} to={'/?category=' + category.id}>
               {category.name}
             </NavLink>
-          </NavItem>)
+          </NavItem>
+        );
       } else {
         return null;
       }
@@ -49,51 +52,66 @@ class HomePage extends Component {
   renderNav() {
     const categories = this.props.categories;
     if (categories.isFetching || categories.categories === null) {
-      return (<Loading />);
+      return <Loading />;
     }
-    return categories.categories.map((category) => {
+    return categories.categories.map(category => {
       category = category.category;
       if (typeof category.mainCategory === 'undefined') {
-          return (<div  key={category.id}>
-          <NavItem>
-            <NavLink
-              onClick={() =>
-                this.setState({
-                  expandedCategory: category
-                })}
-              tag={Link}
-              to={'/?category='+category.id}
-            >
-              {category.name}
-            </NavLink>
-          </NavItem>
-          {this.renderSubNav(category)}
-          </div>)
+        return (
+          <div key={category.id}>
+            <NavItem>
+              <NavLink
+                onClick={() =>
+                  this.setState({
+                    expandedCategory: category
+                  })}
+                tag={Link}
+                to={'/?category=' + category.id}
+              >
+                {category.name}
+              </NavLink>
+            </NavItem>
+            {this.renderSubNav(category)}
+          </div>
+        );
       } else {
         return null;
       }
     });
   }
 
-
   render() {
     return (
       <Row>
-        <Col xl="3" lg="3" md="4" sm="12" xs="12">
+        <Col md="12">
+          <h2 className="text-center mt-3 mb-5">
+            {localizedTexts.HomePage.welcomeMessage}
+          </h2>
+        </Col>
+        <Col xl="3" lg="3" md="4" sm="12" xs="12" className="mb-3">
           <Nav pills vertical>
             <NavbarBrand>{localizedTexts.HomePage.categories}</NavbarBrand>
             {this.renderNav()}
             <NavItem>
               <Link to="/create-package">
-                <Button color="secondary" size="lg">{localizedTexts.HomePage.createPackage} <FontAwesome style={{fontSize: '25px'}} name="gift" /></Button>
+                <Button color="secondary" size="lg">
+                  {localizedTexts.HomePage.createPackage}
+                  {' '}
+                  <FontAwesome style={{ fontSize: '25px' }} name="gift" />
+                </Button>
               </Link>
             </NavItem>
           </Nav>
         </Col>
-        <Col xl="9" lg="9" md="8" sm="12" xs="12" style={{paddingTop: '50px'}}>
-          <ProductList itemSize="250" categoryId={typeof this.props.location.query.category === 'undefined' ? null : this.props.location.query.category}/>
-          <Button>{localizedTexts.HomePage.previous}</Button>
-          <Button>{localizedTexts.HomePage.next}</Button>
+        <Col xl="9" lg="9" md="8" sm="12" xs="12">
+          <ProductList
+            itemSize="250"
+            categoryId={
+              typeof this.props.location.query.category === 'undefined'
+                ? null
+                : this.props.location.query.category
+            }
+          />
         </Col>
       </Row>
     );

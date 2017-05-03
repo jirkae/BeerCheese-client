@@ -7,29 +7,35 @@ import { categoriesApi } from '../../actions/categories';
 //import PriceCalculation from '../../components/configurator/PriceCalculation';
 
 class CreatePackageRootPage extends Component {
-    componentDidMount() {
-        this.props.categoriesApi();
-    }
+  componentDidMount() {
+    this.props.categoriesApi();
+  }
 
-    render() {
-        return (
-            <div>
-                <PackageCreationNav />
-                <Row>
-                    <Col xs={{ size: 7, offset: 1 }}>
-                        {this.props.children}
-                    </Col>
-                    <Col xs={{ size: 3 }}>
-                        <Preview />
-                    </Col>
-                </Row>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <PackageCreationNav />
+        <Row>
+          <Col xs="12" className="hidden-sm-up">
+            <Preview />
+          </Col>
+          <Col
+            xs={{ size: 12, offset: 0 }}
+            sm={{ size: 7, offset: 1}}
+          >
+            {this.props.children}
+          </Col>
+          <Col className="hidden-xs-down" xs={{ size: 12}} sm={{ size: 3 }}>
+            <Preview />
+          </Col>
+        </Row>
+      </div>
+    );
+  }
 }
 
-const mapSateToProps = state => ({
-  
-});
+const mapSateToProps = state => ({});
 
-export default connect(mapSateToProps, { categoriesApi })(CreatePackageRootPage);
+export default connect(mapSateToProps, { categoriesApi })(
+  CreatePackageRootPage
+);
