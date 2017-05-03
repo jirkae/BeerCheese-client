@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { updateCart } from '../../actions/cart';
 import { openModal } from '../../actions/openModal';
 import localizedTexts from '../../text_localization/LocalizedStrings';
+import { PACKAGE_CATEGORY_PATH } from '../../util/util';
+import { APP_URL} from '../../api';
 
 class Product extends Component {
   constructor(props) {
@@ -28,7 +30,18 @@ class Product extends Component {
       });
     }
     newCart.packages.forEach(_package => {
-      if (_package.isCreating) {
+      let willInsert = true;
+      if (_package.isCreating && _package.items.length >= 9 && this.product.category !== PACKAGE_CATEGORY_PATH) {
+        willInsert = false;
+      }
+        if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
+          _package.items.forEach((item) => {
+            if (item.category === PACKAGE_CATEGORY_PATH) {
+              willInsert = false;
+            }
+          });
+        }
+      if (willInsert) {
         _package.items.push(this.props.product);
       }
     });
@@ -48,9 +61,9 @@ class Product extends Component {
         </CardBlock>
         <img
           width={size}
-          src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=318%C3%97180&amp;w=318&amp;h=180"
+          src={APP_URL + product.image}
           alt="product"
-          style={{ alignSelf: 'center' }}
+          style={{ alignSelf: 'center' , width: 'auto', maxHeight: '200px'}}
           onClick={() => {
             openModal({ name: 'productDetails', data: product });
           }}
@@ -59,13 +72,15 @@ class Product extends Component {
           <CardSubtitle>
             {product.priceAfterDiscount || product.price} Kč
           </CardSubtitle>
-          {addCartButton === true &&
+          {addCartButton === true && product.quantity > 0 &&
             <Button
               style={{ marginTop: '15px' }}
               onClick={this.handleAddToCartClick}
             >
               {localizedTexts.Product.btnAddToPackage}
             </Button>}
+          {product.quantity === 0 &&
+          <span>Dočasně vyprodáno</span>}
         </CardBlock>
       </Card>
     );

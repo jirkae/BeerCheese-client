@@ -36,3 +36,6 @@ export function deepValue(obj, path) {
   }
   return obj;
 }
+
+export const PACKAGE_CATEGORY_ID = 14;
+export const PACKAGE_CATEGORY_PATH = '/api/categories/' + PACKAGE_CATEGORY_ID;

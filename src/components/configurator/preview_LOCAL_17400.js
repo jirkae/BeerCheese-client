@@ -1,14 +1,5 @@
-import React, { Component } from 'react';
-import {
-  Card,
-  CardBlock,
-  CardFooter,
-  Row,
-  Col,
-  Input,
-  Label,
-  Button
-} from 'reactstrap';
+import React, {Component} from 'react';
+import { Card, CardBlock, CardFooter, Row, Col, Input, Label, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { updateCart } from '../../actions/cart';
 import { PACKAGE_CATEGORY_PATH } from '../../util/util';
@@ -51,34 +42,33 @@ class Preview extends Component {
                 }
                 return null;
             });
+        }
+        return null;
     }
-    return null;
-  }
 
-  getPackagePrice() {
-    const { cart } = this.props;
-    let price = 0;
-    cart.packages.forEach(_package => {
-      if (_package.isCreating) {
-        _package.items.forEach(item => {
-          price += item.price;
+    getPackagePrice() {
+        const {cart} = this.props;
+        let price = 0;
+        cart.packages.forEach((_package) => {
+            if (_package.isCreating) {
+                _package.items.forEach((item) => {
+                    price += item.price;
+                });
+            }
         });
-      }
-    });
-    return parseFloat(price).toFixed(2);
-  }
+        return price;
+    }
 
-  getPackageItemsCount() {
-    const { cart } = this.props;
-    let count = 0;
-    cart.packages.forEach(_package => {
-      if (_package.isCreating) {
-        count = _package.items.length;
-      }
-    });
-    return count;
-  }
-
+    getPackageItemsCount() {
+        const {cart} = this.props;
+        let count = 0;
+        cart.packages.forEach((_package) => {
+            if (_package.isCreating) {
+                count = _package.items.length;
+            }
+        });
+        return count;
+    }
 
     isTextFilled() {
         let isFilled = false;
@@ -137,7 +127,6 @@ class Preview extends Component {
             </Card>
         );
     }
-
 }
 
 const mapSateToProps = state => ({
