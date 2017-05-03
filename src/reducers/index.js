@@ -7,6 +7,7 @@ export const USER = 'USER';
 export const PRODUCTS = 'PRODUCTS';
 export const CATEGORIES = 'CATEGORIES';
 export const CART = 'CART';
+export const SHIPPINGS = 'SHIPPINGS';
 
 const openModalInitialState = {
   name: null,
@@ -58,6 +59,11 @@ const categoriesInitialState = {
   error: null
 };
 
+const shippingsInitialState = {
+  isFetching: false,
+  shippings: [],
+  error: null
+};
 
 const reducer = (initialState, type) => {
   return (state = initialState, action = {}) => {
@@ -75,5 +81,6 @@ export const rootReducer = combineReducers({
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),
   categories: reducer(categoriesInitialState, CATEGORIES),
+  shippings: reducer(shippingsInitialState, SHIPPINGS),
   cart: reducer(cartInitialState(), CART)
 });

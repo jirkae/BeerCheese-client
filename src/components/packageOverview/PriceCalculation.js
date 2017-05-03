@@ -22,7 +22,9 @@ class PriceCalculation extends Component {
     }
 
     render() {
+        const {cart} = this.props;
         const packagesPrice = this.getPackagesPrice();
+        const shippingPrice = cart.shipping !== undefined ? cart.shipping.price : 0;
 
         return(
             <Card>
@@ -34,10 +36,12 @@ class PriceCalculation extends Component {
                                 <td>{localizedTexts.PackageOverview.priceCalculation.packages}</td>
                                 <td className="text-right">{packagesPrice} Kč</td>
                             </tr>
-                            <tr>
-                                <td>{localizedTexts.PackageOverview.priceCalculation.delivery}</td>
-                                <td className="text-right">50</td>
-                            </tr>
+                            {cart.shipping !== undefined &&
+                                <tr>
+                                    <td>{localizedTexts.PackageOverview.priceCalculation.delivery}</td>
+                                    <td className="text-right">{shippingPrice}</td>
+                                </tr>
+                            }
                             <tr>
                                 <td>{localizedTexts.PackageOverview.priceCalculation.payment}</td>
                                 <td className="text-right">23</td>
@@ -45,7 +49,7 @@ class PriceCalculation extends Component {
                         </tbody>
                     </Table>
                 </CardBlock>
-                <CardFooter>{localizedTexts.PackageOverview.priceCalculation.total}: <strong>{packagesPrice} Kč</strong></CardFooter>
+                <CardFooter>{localizedTexts.PackageOverview.priceCalculation.total}: <strong>{packagesPrice + shippingPrice} Kč</strong></CardFooter>
             </Card>
         );
     }
