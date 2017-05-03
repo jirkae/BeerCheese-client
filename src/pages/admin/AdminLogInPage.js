@@ -11,8 +11,12 @@ import {
   FormFeedback
 } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
+import { connect } from 'react-redux';
+import { login } from '../../actions/auth';
+import { isNull } from '../../util/util';
+import { browserHistory } from 'react-router';
 
-export default class AdminLoginPage extends React.Component {
+class AdminLoginPage extends React.Component {
   state = {
     name: '',
     pass: '',
@@ -22,7 +26,25 @@ export default class AdminLoginPage extends React.Component {
     }
   };
 
-  handleSubmit = () => {
+  componentWillUpdate(nextProps) {
+    const { auth } = nextProps;
+
+    //after successfull login redirect to admin pages
+    if (auth.isAuthenticated && auth.isAdmin) {
+      browserHistory.push('/admin/customers');
+    }
+  }
+
+  formHasErrors = (errors = this.state.errors) =>
+    Array.prototype.reduce.call(
+      errors,
+      (acc, key) => acc || isNull(key),
+      false
+    );
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { login } = this.props;
     let errors = {
       name: null,
       pass: null
@@ -34,6 +56,13 @@ export default class AdminLoginPage extends React.Component {
       errors.pass = localizedTexts.logIn.mandatoryField;
     }
     this.setState({ errors });
+
+    if (!this.formHasErrors(errors)) {
+      login({
+        username: this.state.name,
+        password: this.state.pass
+      });
+    }
   };
 
   updateFields = e => {
@@ -44,6 +73,7 @@ export default class AdminLoginPage extends React.Component {
   };
 
   render() {
+    const { auth } = this.props;
     return (
       <Container>
         <Row>
@@ -58,7 +88,7 @@ export default class AdminLoginPage extends React.Component {
         </Row>
         <Row>
           <Col>
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
               <FormGroup color={this.state.errors.name ? 'danger' : ''}>
                 <Label for="name">{localizedTexts.logIn.name}</Label>
                 <Input
@@ -69,12 +99,6 @@ export default class AdminLoginPage extends React.Component {
                 />
                 <FormFeedback>{this.state.errors.name}</FormFeedback>
               </FormGroup>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form>
               <FormGroup color={this.state.errors.pass ? 'danger' : ''}>
                 <Label for="pass">{localizedTexts.logIn.pass}</Label>
                 <Input
@@ -86,17 +110,26 @@ export default class AdminLoginPage extends React.Component {
                 />
                 <FormFeedback>{this.state.errors.pass}</FormFeedback>
               </FormGroup>
+              <Button type="submit">
+                {localizedTexts.logIn.btnSignIn}
+              </Button>
+              {auth.isFetching && <p>{localizedTexts.logIn.waiting}</p>}
+              {auth.err &&
+                <p className="text-danger">
+                  {localizedTexts.logIn.error}
+                </p>}
             </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Button onClick={this.handleSubmit}>
-              {localizedTexts.logIn.btnSignIn}
-            </Button>
           </Col>
         </Row>
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, {
+  login
+})(AdminLoginPage);

@@ -38,17 +38,23 @@ import AdminSuppliersPage from './pages/admin/AdminSuppliersPage';
 
 export function createRoutes(store) {
   const requireAuthAdmin = (nextState, replace) => {
-    //right now we allow anyone who is authenticated
     const { auth } = store.getState();
-    if (!auth.isAuthenticated) {
+    if (!auth.isAdmin) {
       replace('/admin');
+    }
+  };
+  
+  const skipWhenAdmin = (nextState, replace) => {
+    const { auth } = store.getState();
+    if (auth.isAuthenticated && auth.isAdmin) {
+      replace('/admin/customers');
     }
   };
 
   return (
     <Route path="/">
       <Route path="/admin">
-        <IndexRoute component={AdminLoginPage} />
+        <IndexRoute component={AdminLoginPage} onEnter={skipWhenAdmin} />
         <Route component={AdminRootPage}>
           <Route
             path="customers"

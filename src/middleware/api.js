@@ -30,7 +30,6 @@ import {
 } from '../util/util';
 import api from '../api';
 import { tokenTimeout } from '../actions/auth';
-import { dispatchToAPI } from '../actions/common';
 
 function callApi(config = {}) {
   const request = api(config);
@@ -73,7 +72,7 @@ export default store => next => action => {
       if (error.response.status === 401) {
         next(tokenTimeout());
         //Send previous request again
-        next(dispatchToAPI(callAPI));
+        // next(dispatchToAPI(callAPI));
       }
       next(errorAction({ error }));
     });

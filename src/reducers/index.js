@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { isFunction, isNullOrUndef } from '../util/util';
+import {hasRoleAdmin, isFunction, isNullOrUndef} from '../util/util';
 
 export const AUTH = 'AUTH';
 export const MODAL = 'MODAL';
@@ -14,9 +14,14 @@ const openModalInitialState = {
   data: null
 };
 
-const authInitialState = {
-  isFetching: false,
-  isAuthenticated: !isNullOrUndef(localStorage.getItem('x-auth'))
+const authInitialState = () => {
+  const token = localStorage.getItem('x-auth');
+  const isAdmin = hasRoleAdmin(token);
+  return {
+    isFetching: false,
+    isAuthenticated: !isNullOrUndef(token),
+    isAdmin
+  };
 };
 
 const userInitialState = {
@@ -77,7 +82,7 @@ const reducer = (initialState, type) => {
 };
 
 export const rootReducer = combineReducers({
-  auth: reducer(authInitialState, AUTH),
+  auth: reducer(authInitialState(), AUTH),
   openModal: reducer(openModalInitialState, MODAL),
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),

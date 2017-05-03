@@ -1,6 +1,6 @@
 import { defaultDispatch, dispatchToAPI, ommitState } from './common';
 import { AUTH } from '../reducers/index';
-import { isNullOrUndef } from '../util/util';
+import { hasRoleAdmin, isNullOrUndef } from '../util/util';
 import { getCurrentUser } from './currentUser';
 import { hideModals } from './openModal';
 
@@ -12,13 +12,15 @@ const loginRequested = creds =>
   defaultDispatchAuth({
     isFetching: true,
     isAuthenticated: false,
+    isAdmin: false,
     creds
   });
 
-const loginReceived = () =>
+const loginReceived = token =>
   defaultDispatchAuth({
     isFetching: false,
-    isAuthenticated: true
+    isAuthenticated: true,
+    isAdmin: hasRoleAdmin(token)
     // authToken
   });
 
@@ -30,21 +32,20 @@ const loginError = err =>
   });
 
 //Action creator which saves received token
-const loginSuccess = data =>
-  dispatch => {
-    if (
-      !isNullOrUndef(data.response) &&
-      !isNullOrUndef(data.response.headers) &&
-      !isNullOrUndef(data.response.headers['x-auth'])
-    ) {
-      localStorage.setItem('x-auth', data.response.headers['x-auth']);
-      dispatch(loginReceived());
-      dispatch(getCurrentUser());
-      dispatch(hideModals());
-    } else {
-      dispatch(loginError('No auth token received'));
-    }
-  };
+const loginSuccess = data => dispatch => {
+  if (
+    !isNullOrUndef(data.response) &&
+    !isNullOrUndef(data.response.headers) &&
+    !isNullOrUndef(data.response.headers['x-auth'])
+  ) {
+    localStorage.setItem('x-auth', data.response.headers['x-auth']);
+    dispatch(loginReceived(data.response.headers['x-auth']));
+    dispatch(getCurrentUser());
+    dispatch(hideModals());
+  } else {
+    dispatch(loginError('No auth token received'));
+  }
+};
 
 const logoutRequested = () => {
   localStorage.removeItem('x-auth');
@@ -57,7 +58,8 @@ const logoutRequested = () => {
 const logoutSuccess = () => {
   return defaultDispatchAuth({
     isFetching: false,
-    isAuthenticated: false
+    isAuthenticated: false,
+    isAdmin: false
   });
 };
 
@@ -95,6 +97,7 @@ export const tokenTimeout = () => {
   localStorage.removeItem('x-auth');
   return defaultDispatchAuth({
     isFetching: false,
-    isAuthenticated: false
+    isAuthenticated: false,
+    isAdmin: false
   });
 };

@@ -10,6 +10,9 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router';
 import localizedTexts from '../../text_localization/LocalizedStrings';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
+import { browserHistory } from 'react-router';
 
 class NavBar extends Component {
   constructor(props) {
@@ -24,6 +27,18 @@ class NavBar extends Component {
     this.setState({
       isOpen: !this.state.isOpen
     });
+  };
+
+  componentWillUpdate(nextProps) {
+    const { auth } = nextProps;
+    if (!auth.isAuthenticated || !auth.isAdmin) {
+      browserHistory.push('/');
+    }
+  }
+
+  handleLogout = e => {
+    e.preventDefault();
+    this.props.logout();
   };
 
   render() {
@@ -54,7 +69,9 @@ class NavBar extends Component {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink tag={Link}>{localizedTexts.NavBar.logOut}</NavLink>
+              <NavLink tag={Link} to="#" onClick={this.handleLogout}>
+                {localizedTexts.NavBar.logOut}
+              </NavLink>
             </NavItem>
           </Nav>
         </Collapse>
@@ -63,4 +80,10 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, {
+  logout
+})(NavBar);
