@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default class ContactPage extends React.Component {
-  render() {
+  static render() {
     return (
       <div>
         <h1>Kontaktujte nás</h1>
