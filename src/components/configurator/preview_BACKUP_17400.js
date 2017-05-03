@@ -15,6 +15,7 @@ import { PACKAGE_CATEGORY_PATH } from '../../util/util';
 import { APP_URL} from '../../api';
 
 class Preview extends Component {
+<<<<<<< HEAD
     removeItem(itemToRemove) {
         let newCart = Object.assign({}, this.props.cart);
         newCart.packages.forEach((_package) => {
@@ -51,6 +52,57 @@ class Preview extends Component {
                 }
                 return null;
             });
+=======
+  removeItem(itemToRemove) {
+    let newCart = Object.assign({}, this.props.cart);
+    newCart.packages.forEach(_package => {
+      if (_package.isCreating) {
+        const index = _package.items.findIndex(
+          item => item.id === itemToRemove.id
+        );
+        if (index > -1) {
+          _package.items.splice(index, 1);
+        }
+      }
+    });
+    this.props.updateCart(newCart);
+  }
+
+  renderItems() {
+    const { cart } = this.props;
+    if (
+      cart.packages !== undefined &&
+      typeof cart.packages.length !== 'undefined'
+    ) {
+      return cart.packages.map(_package => {
+        if (_package.isCreating) {
+          return _package.items.map(item => {
+            return (
+              <Card style={{ margin: '10px' }}>
+                <p style={{ width: '80px', margin: 3 }}>{item.name}</p>
+                <img
+                  width="90px"
+                  style={{ margin: 'auto' }}
+                  src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180"
+                  alt="product"
+                />
+
+                <Button
+                  size="sm"
+                  onClick={e => {
+                    this.removeItem(item);
+                  }}
+                >
+                  Odebrat
+                </Button>
+
+              </Card>
+            );
+          });
+>>>>>>> master
+        }
+        return null;
+      });
     }
     return null;
   }
@@ -79,7 +131,7 @@ class Preview extends Component {
     return count;
   }
 
-
+<<<<<<< HEAD
     isTextFilled() {
         let isFilled = false;
         const {cart} = this.props;
@@ -137,7 +189,45 @@ class Preview extends Component {
             </Card>
         );
     }
-
+=======
+  render() {
+    return (
+      <Card>
+        <CardBlock>
+          <Row>
+            {this.renderItems()}
+          </Row>
+        </CardBlock>
+        <CardFooter style={{ background: 'none' }}>
+          <Row>
+            <Col xs={6}>
+              <Label check>
+                <Input type="checkbox" disabled />{' '}
+                Balení
+              </Label>
+            </Col>
+            <Col xs={6}>
+              <Label check>
+                <Input type="checkbox" disabled checked />{' '}
+                Vzkaz
+              </Label>
+            </Col>
+          </Row>
+        </CardFooter>
+        <CardFooter>
+          <strong style={{ fontSize: '24px' }}>
+            Cena celkem:
+            {' '}
+            <span style={{ fontSize: '20px' }}>
+              {this.getPackagePrice()} Kč
+            </span>
+          </strong>
+          <span className="pull-right">{this.getPackageItemsCount()}/9</span>
+        </CardFooter>
+      </Card>
+    );
+  }
+>>>>>>> master
 }
 
 const mapSateToProps = state => ({

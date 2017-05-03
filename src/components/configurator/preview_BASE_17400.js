@@ -1,30 +1,17 @@
-import React, { Component } from 'react';
-import {
-  Card,
-  CardBlock,
-  CardFooter,
-  Row,
-  Col,
-  Input,
-  Label,
-  Button
-} from 'reactstrap';
+import React, {Component} from 'react';
+import { Card, CardBlock, CardFooter, Row, Col, Input, Label, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import { updateCart } from '../../actions/cart';
-import { PACKAGE_CATEGORY_PATH } from '../../util/util';
-import { APP_URL} from '../../api';
 
 class Preview extends Component {
     removeItem(itemToRemove) {
         let newCart = Object.assign({}, this.props.cart);
         newCart.packages.forEach((_package) => {
             if (_package.isCreating) {
-                _package.items.every((item, key) => {
+                _package.items.forEach((item, key) => {
                     if (item.id === itemToRemove.id) {
                         _package.items.splice(key,1);
-                        return false;
                     }
-                    return true;
                 });
             }
         });
@@ -38,9 +25,11 @@ class Preview extends Component {
                 if (_package.isCreating) {
                     return _package.items.map((item) => {
                         return (
-                            <Card style={{margin: '1%', width: '30%'}}>
-                                <p style={{margin: '.5rem', fontSize: '12px'}}>{item.name}</p>
-                                <img style={{margin: 'auto', width: 'auto', maxHeight: '80px'}} src={APP_URL + item.image} alt="product" />
+                            <Card style={{margin: '10px'}}>
+                                <CardBlock>
+                                    <p style={{width: '130px', margin: 0}}>{item.name}</p>
+                                </CardBlock>
+                                <img width={130} style={{margin: 'auto'}} src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="product" />
                                 <CardBlock>
                                     <Button size="sm"
                                     onClick={(e) => {this.removeItem(item);}}>Odebrat</Button>
@@ -51,59 +40,32 @@ class Preview extends Component {
                 }
                 return null;
             });
-    }
-    return null;
-  }
-
-  getPackagePrice() {
-    const { cart } = this.props;
-    let price = 0;
-    cart.packages.forEach(_package => {
-      if (_package.isCreating) {
-        _package.items.forEach(item => {
-          price += item.price;
-        });
-      }
-    });
-    return parseFloat(price).toFixed(2);
-  }
-
-  getPackageItemsCount() {
-    const { cart } = this.props;
-    let count = 0;
-    cart.packages.forEach(_package => {
-      if (_package.isCreating) {
-        count = _package.items.length;
-      }
-    });
-    return count;
-  }
-
-
-    isTextFilled() {
-        let isFilled = false;
-        const {cart} = this.props;
-        cart.packages.forEach((_package) => {
-            if (_package.isCreating) {
-                isFilled = _package.text !== undefined && _package.text !== '';
-            }
-        });
-        return isFilled;
+        }
+        return null;
     }
 
-    isPackageSelected() {
-        let isSelected = false;
+    getPackagePrice() {
         const {cart} = this.props;
+        let price = 0;
         cart.packages.forEach((_package) => {
             if (_package.isCreating) {
                 _package.items.forEach((item) => {
-                    if (item.category === PACKAGE_CATEGORY_PATH) {
-                        isSelected = true;
-                    }
-                })
+                    price += item.price;
+                });
             }
         });
-        return isSelected;
+        return price;
+    }
+
+    getPackageItemsCount() {
+        const {cart} = this.props;
+        let count = 0;
+        cart.packages.forEach((_package) => {
+            if (_package.isCreating) {
+                count = _package.items.length;
+            }
+        });
+        return count;
     }
 
     render() {
@@ -118,13 +80,13 @@ class Preview extends Component {
                     <Row>
                         <Col xs={6}>
                             <Label check>
-                                <Input type="checkbox" disabled checked={this.isPackageSelected()} />{' '}
+                                <Input type="checkbox" disabled/>{' '}
                                 Balení
                             </Label>
                         </Col>
                         <Col xs={6}>
                             <Label check>
-                                <Input type="checkbox" disabled checked={this.isTextFilled()}/>{' '}
+                                <Input type="checkbox" disabled checked/>{' '}
                                 Vzkaz
                             </Label>
                         </Col>
@@ -137,7 +99,6 @@ class Preview extends Component {
             </Card>
         );
     }
-
 }
 
 const mapSateToProps = state => ({
