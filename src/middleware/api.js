@@ -29,6 +29,8 @@ import {
   isUndefined
 } from '../util/util';
 import api from '../api';
+import { tokenTimeout } from '../actions/auth';
+import { dispatchToAPI } from '../actions/common';
 
 function callApi(config = {}) {
   const request = api(config);
@@ -38,38 +40,41 @@ function callApi(config = {}) {
 
 export const CALL_API = 'Call API';
 
-export default store =>
-  next =>
-    action => {
-      const callAPI = action[CALL_API];
+export default store => next => action => {
+  const callAPI = action[CALL_API];
 
-      // So the middleware doesn't get applied to every single action
-      if (isUndefined(callAPI)) {
-        return next(action);
+  // So the middleware doesn't get applied to every single action
+  if (isUndefined(callAPI)) {
+    return next(action);
+  }
+
+  const { actions, config } = callAPI;
+
+  if (isNullOrUndef(config) || !isString(config.url)) {
+    throw new Error('Specify a string url in config.');
+  }
+
+  if (!isArray(actions) || actions.length !== 3) {
+    throw new Error('Expected an array of three actions.');
+  }
+  if (!actions.every(isFunction)) {
+    throw new Error('Expected actions to be functions');
+  }
+
+  const [requestAction, successAction, errorAction] = actions;
+
+  next(requestAction());
+
+  return callApi(config)
+    .then(response => {
+      next(successAction({ response }));
+    })
+    .catch(error => {
+      if (error.response.status === 401) {
+        next(tokenTimeout());
+        //Send previous request again
+        next(dispatchToAPI(callAPI));
       }
-
-      const { actions, config } = callAPI;
-
-      if (isNullOrUndef(config) || !isString(config.url)) {
-        throw new Error('Specify a string url in config.');
-      }
-
-      if (!isArray(actions) || actions.length !== 3) {
-        throw new Error('Expected an array of three actions.');
-      }
-      if (!actions.every(isFunction)) {
-        throw new Error('Expected actions to be functions');
-      }
-
-      const [requestAction, successAction, errorAction] = actions;
-
-      next(requestAction());
-      
-      return callApi(config)
-        .then(response => {
-          next(successAction({ response }));
-        })
-        .catch(error => {
-          next(errorAction({ error }));
-        });
-    };
+      next(errorAction({ error }));
+    });
+};
