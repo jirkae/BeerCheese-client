@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default class BusinessConditionsPage extends React.Component {
-  static render() {
+  render() {
     return (
       <div>
         <h1>Kontaktní údaje prodávajícího</h1>
