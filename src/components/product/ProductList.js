@@ -37,7 +37,7 @@ class ProductList extends Component {
     if (!isNull(products) && products.length) {
       return products.map(({ product }) => (
         <LazyLoad placeholder={<Loading />} key={product.id} height="50px">
-          <Product product={product} size={this.props.itemSize}/>
+          <Product product={product} size={this.props.itemSize} addCartButton={this.props.addCartButton === undefined ? false : this.props.addCartButton}/>
         </LazyLoad>
       ));
     }

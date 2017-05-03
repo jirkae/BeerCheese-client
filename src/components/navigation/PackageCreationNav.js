@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Row, Col, Button, NavLink, Nav, ButtonGroup } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
+import { connect } from 'react-redux';
 
-const links = [
-  {
+
+const otherLinks = [
+/*  {
     name: localizedTexts.PackageCreationNav.beer,
     link: "/create-package",
   },
@@ -15,7 +17,7 @@ const links = [
   {
     name: localizedTexts.PackageCreationNav.packages,
     link: "/create-package/package",
-  },
+  },*/
   {
     name: localizedTexts.PackageCreationNav.message,
     link: "/create-package/message",
@@ -27,7 +29,23 @@ const links = [
 ];
 
 class PackageOverviewNav extends Component {
+
   render() {
+    var links = [];
+    const {categories} = this.props.categories;
+    if (categories !== undefined && categories !== null) {
+      categories.forEach((category) => {
+        category = category.category;
+        if (typeof category.mainCategory === 'undefined') {
+          links.push({
+            name: category.name,
+            link: "/create-package?category=" + category.id
+          });
+        }
+      });
+    }
+    links = links.concat(otherLinks);
+
     const getCurrentIndex = () => {
       let currentLinkIndex;
       links.forEach((link, i) => {
@@ -78,4 +96,8 @@ PackageOverviewNav.contextTypes = {
   location: React.PropTypes.object
 }
 
-export default PackageOverviewNav;
+const mapSateToProps = state => ({
+  categories: state.categories
+});
+
+export default connect(mapSateToProps, { })(PackageOverviewNav);
