@@ -6,7 +6,8 @@ import PageNotFound from './pages/PageNotFound';
 import RootPage from './pages/RootPage';
 import AdminLoginPage from './pages/admin/AdminLogInPage';
 import CreatePackageRootPage from './pages/configurator/CreatePackageRootPage';
-import CreatePackageBeerPage from './pages/configurator/CreatePackageBeerPage';
+import CreatePackageCategoryPage from './pages/configurator/CreatePackageCategoryPage';
+//import CreatePackageBeerPage from './pages/configurator/CreatePackageBeerPage';
 import CreatePackageMessagePage
   from './pages/configurator/CreatePackageMessagePage';
 import CreatePackagePackagePage
@@ -75,7 +76,7 @@ export function createRoutes(store) {
         <IndexRoute component={HomePage} />
         <Route path="/register" component={RegistrationPage} />
         <Route path="/create-package" component={CreatePackageRootPage} >
-          <IndexRoute component={CreatePackageBeerPage} />
+          <IndexRoute component={CreatePackageCategoryPage} />
           <Route path="supplement" component={CreatePackageSupplementPage} />
           <Route path="package" component={CreatePackagePackagePage} />
           <Route path="message" component={CreatePackageMessagePage} />

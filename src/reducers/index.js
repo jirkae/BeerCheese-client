@@ -40,7 +40,7 @@ const userInitialState = {
 const cartInitialState = () => {
   const cart = localStorage.getItem(CART)
     ? JSON.parse(localStorage.getItem(CART))
-    : { packages: [{}] };
+    : { packages: [] };
   return {
     ...cart
   };
@@ -54,8 +54,7 @@ const productsInitialState = {
 
 const categoriesInitialState = {
   isFetching: false,
-  categories: null,
-  subcategories: null,
+  categories: [],
   error: null
 };
 
@@ -76,5 +75,5 @@ export const rootReducer = combineReducers({
   user: reducer(userInitialState, USER),
   products: reducer(productsInitialState, PRODUCTS),
   categories: reducer(categoriesInitialState, CATEGORIES),
-  cart: reducer(cartInitialState, CART)
+  cart: reducer(cartInitialState(), CART)
 });

@@ -3,17 +3,33 @@ import { Link } from 'react-router';
 import { Row, Col } from 'reactstrap';
 import localizedStrings from '../../text_localization/LocalizedStrings';
 import { css } from 'glamor';
-import CartContent from '../CartContent';
 import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
 
-export default class Cart extends React.Component {
-  state = {
-    price: 9000,
-    amount: 3,
-    showCartContent: false
-  };
+class Cart extends React.Component {
+  
+  getTotalCountAndPrice() {
+    let data = {
+      count: 0,
+      price: 0
+    };
+    const {cart} = this.props;
+    cart.packages.forEach((_package) => {
+      if (_package.isCreating !== true) {
+        data.count += 1;
+        let packagePrice = 0;
+        _package.items.forEach((item) => {
+          packagePrice += item.price;
+        });
+        data.price += packagePrice * _package.count;
+      }
+    });
+    return data;
+  }
 
   render() {
+    const totalCountAndPrice = this.getTotalCountAndPrice();
+
     return (
       <Col xs={2}>
 
@@ -21,10 +37,10 @@ export default class Cart extends React.Component {
             <Col xs="7">
               <ul className={`${this.cssCartControl}`}>
                 <li>
-                  {localizedStrings.NavPanel.amount}: {this.state.amount} ks
+                  {localizedStrings.NavPanel.amount}: {totalCountAndPrice.count} ks
                 </li>
                 <li>
-                  {localizedStrings.NavPanel.price}: {this.state.price} Kč
+                  {localizedStrings.NavPanel.price}: {totalCountAndPrice.price} Kč
                 </li>
               </ul>
             </Col>
@@ -32,18 +48,11 @@ export default class Cart extends React.Component {
               <Link
                 to="/package-overview"
                 className={`${this.cssExpandLink}`}
-                onClick={() => {
-                    return;
-                    /*this.setState({
-                      showCartContent: !this.state.showCartContent
-                    })*/}}
               >
                 <FontAwesome name="shopping-cart" style={{fontSize: '45px'}}/>
               </Link>
             </Col>
           </Row>
-        {this.state.showCartContent ? <CartContent /> : ''}
-
       </Col>
     );
   }
@@ -66,3 +75,10 @@ export default class Cart extends React.Component {
     color: 'black'
   });
 }
+
+
+const mapSateToProps = state => ({
+  cart: state.cart
+});
+
+export default connect(mapSateToProps, {  })(Cart);
