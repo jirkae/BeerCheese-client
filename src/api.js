@@ -8,7 +8,10 @@ const IMAGES_URL = 'https://beer-jansyk13.rhcloud.com/images';
 const authInterceptor = config => {
   const token = localStorage.getItem('x-auth') || null;
   if (!isNull(token)) {
-    config.headers = Object.assign({}, config.headers, { 'x-auth': token });
+    config = {
+      ...config,
+      headers: { ...config.headers, 'x-auth': token }
+    };
   }
   return config;
 };

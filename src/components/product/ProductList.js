@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row } from 'reactstrap';
+import {CardDeck} from 'reactstrap';
 import LazyLoad from "react-lazyload";
 import Loading from "../images/Loading";
 import Product from "./Product";
@@ -45,9 +45,9 @@ class ProductList extends Component {
 
   render() {
     return (
-      <Row>
+      <CardDeck>
         {this.renderProducts()}
-      </Row>
+      </CardDeck>
     );
   }
 }

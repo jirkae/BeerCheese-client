@@ -86,7 +86,8 @@ export default new LocalizedStrings({
       supplements: 'Doplňky',
       createPackage: 'Vytvořit balíček',
       previous: 'Předchozí',
-      next: 'Další'
+      next: 'Další',
+      welcomeMessage: 'U nás si vytvoříte balíček maximálně 9 produktů přesně podle vašic představ.'
     },
     Product: {
       btnAddToPackage: 'Přidat do balíčku',

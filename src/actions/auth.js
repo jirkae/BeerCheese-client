@@ -90,3 +90,11 @@ export const logout = () => {
     actions: [logoutRequested, logoutSuccess, logoutSuccess]
   });
 };
+
+export const tokenTimeout = () => {
+  localStorage.removeItem('x-auth');
+  return defaultDispatchAuth({
+    isFetching: false,
+    isAuthenticated: false
+  });
+};

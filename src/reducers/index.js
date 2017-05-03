@@ -39,12 +39,13 @@ const userInitialState = {
   - price
  */
 const cartInitialState = () => {
-  const cart = localStorage.getItem(CART)
-    ? JSON.parse(localStorage.getItem(CART))
-    : { packages: [] };
-  return {
-    ...cart
-  };
+  const lcCart = localStorage.getItem(CART);
+  const defaultCart = { packages: [] };
+  try {
+    return !isNullOrUndef(lcCart) ? JSON.parse(lcCart) : defaultCart;
+  } catch (e) {
+    return defaultCart;
+  }
 };
 
 const productsInitialState = {
