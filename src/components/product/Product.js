@@ -5,7 +5,8 @@ import { updateCart } from '../../actions/cart';
 import { openModal } from '../../actions/openModal';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 import { PACKAGE_CATEGORY_PATH } from '../../util/util';
-import { APP_URL} from '../../api';
+import { APP_URL } from '../../api';
+import LazyLoad from 'react-lazyload';
 
 class Product extends Component {
   constructor(props) {
@@ -31,16 +32,20 @@ class Product extends Component {
     }
     newCart.packages.forEach(_package => {
       let willInsert = true;
-      if (_package.isCreating && _package.items.length >= 9 && this.product.category !== PACKAGE_CATEGORY_PATH) {
+      if (
+        _package.isCreating &&
+        _package.items.length >= 9 &&
+        this.product.category !== PACKAGE_CATEGORY_PATH
+      ) {
         willInsert = false;
       }
-        if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
-          _package.items.forEach((item) => {
-            if (item.category === PACKAGE_CATEGORY_PATH) {
-              willInsert = false;
-            }
-          });
-        }
+      if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
+        _package.items.forEach(item => {
+          if (item.category === PACKAGE_CATEGORY_PATH) {
+            willInsert = false;
+          }
+        });
+      }
       if (willInsert) {
         _package.items.push(this.props.product);
       }
@@ -59,28 +64,30 @@ class Product extends Component {
         >
           <CardTitle style={{ width: size + 'px' }}>{product.name}</CardTitle>
         </CardBlock>
-        <img
-          width={size}
-          src={APP_URL + product.image}
-          alt="product"
-          style={{ alignSelf: 'center' , width: 'auto', maxHeight: '200px'}}
-          onClick={() => {
-            openModal({ name: 'productDetails', data: product });
-          }}
-        />
+        <LazyLoad height={200} once>
+          <img
+            width={size}
+            src={APP_URL + product.image}
+            alt="product"
+            style={{ alignSelf: 'center', width: 'auto', maxHeight: '200px' }}
+            onClick={() => {
+              openModal({ name: 'productDetails', data: product });
+            }}
+          />
+        </LazyLoad>
         <CardBlock>
           <CardSubtitle>
             {product.priceAfterDiscount || product.price} Kč
           </CardSubtitle>
-          {addCartButton === true && product.quantity > 0 &&
+          {addCartButton === true &&
+            product.quantity > 0 &&
             <Button
               style={{ marginTop: '15px' }}
               onClick={this.handleAddToCartClick}
             >
               {localizedTexts.Product.btnAddToPackage}
             </Button>}
-          {product.quantity === 0 &&
-          <span>Dočasně vyprodáno</span>}
+          {product.quantity === 0 && <span>Dočasně vyprodáno</span>}
         </CardBlock>
       </Card>
     );
