@@ -2,43 +2,82 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Row, Col, Button, NavLink, Nav, ButtonGroup } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
+import { connect } from 'react-redux';
 
 const links = [
   {
     name: localizedTexts.PackageOverviewNav.packages,
     link: "/package-overview",
+    validation: (cart) => {return true}
   },
   {
     name: localizedTexts.PackageOverviewNav.delPay,
     link: "/package-overview/del-pay",
+    validation: (cart) => {
+      let validate = false;
+      cart.packages.every((_package) => {
+        if (_package.isCreating !== true) {
+          validate = true;
+          return false;
+        }
+        return true;
+      });
+      return validate;
+    }
   },
   {
     name: localizedTexts.PackageOverviewNav.delDetails,
     link: "/package-overview/del-details",
+    validation: (cart) => {
+      return cart.shipping !== undefined && cart.paymentType !== undefined;
+    }
   },
   {
     name: localizedTexts.PackageOverviewNav.summary,
     link: "/package-overview/summary",
+    validation: (cart) => {return false}
   },
 ];
 
 class PackageOverviewNav extends Component {
-  render() {
-    const getCurrentIndex = () => {
-      let currentLinkIndex;
-      links.forEach((link, i) => {
-        if (link.link === this.context.router.getCurrentLocation().pathname) {
-          currentLinkIndex = i;
-        }
-      });
-      return currentLinkIndex;
-    };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentLinkIndex: 0
+    }
+  }
+
+  componentDidMount() {
+    this.updateCurrentLinkIndex();
+  }
+
+  doRedirect(link) {
+    if (link.validation(this.props.cart)) {
+      this.context.router.push(link.link);
+      this.updateCurrentLinkIndex();
+    } else {
+      alert('Vyplňte všechna povinná pole');
+    }
+  }
+
+  updateCurrentLinkIndex() {
+    links.every((link, i) => {
+      if (link.link === this.context.router.getCurrentLocation().pathname) {
+        this.setState({currentLinkIndex: i});
+        return false;
+      }
+      return true;
+    });
+  }
+
+  render() {
     const backNextButton = (modifyIndex, text) => {
-      const currentLinkIndex = getCurrentIndex();
+      const {currentLinkIndex} = this.state;
       if (typeof links[currentLinkIndex + modifyIndex] !== 'undefined') {
         return (
-          <NavLink tag={Link} to={links[currentLinkIndex + modifyIndex].link}><Button>{text}</Button></NavLink>
+          <NavLink tag={Link}
+          onClick={() => {this.doRedirect(links[currentLinkIndex + modifyIndex])}}><Button>{text}</Button></NavLink>
         );
       } else {
         return null;
@@ -55,7 +94,7 @@ class PackageOverviewNav extends Component {
             <ButtonGroup className="mr-auto ml-auto">
               {links.map((link, i) => {
                 return (
-                  <Button key={i} onClick={() => {this.context.router.push(link.link)}}>{link.name}</Button>
+                  <Button key={i} onClick={() => {this.doRedirect(link)}}>{link.name}</Button>
                 );
               })}
             </ButtonGroup>
@@ -74,4 +113,8 @@ PackageOverviewNav.contextTypes = {
   location: React.PropTypes.object
 }
 
-export default PackageOverviewNav;
+const mapSateToProps = state => ({
+  cart: state.cart,
+});
+
+export default connect(mapSateToProps, {  })(PackageOverviewNav);

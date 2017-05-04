@@ -40,7 +40,7 @@ class Cart extends React.Component {
                   {localizedStrings.NavPanel.amount}: {totalCountAndPrice.count} ks
                 </li>
                 <li>
-                  {localizedStrings.NavPanel.price}: {totalCountAndPrice.price} Kč
+                  {localizedStrings.NavPanel.price}: {totalCountAndPrice.price.toFixed(2)} Kč
                 </li>
               </ul>
             </Col>

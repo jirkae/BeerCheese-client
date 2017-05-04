@@ -43,11 +43,10 @@ class PackageOverviewDelPayPage extends Component {
   }
 
   render() {
-
-    function makeOptions(name, options) {
+    const makeOptions = (name, options) => {
       const {cart} = this.props;
       let items = [];
-      options.forEach(function (data) {
+      options.forEach((data) => {
         items.push(
           <Row key={name + '-' + data.value}>
             <Col xs={8}>
@@ -63,7 +62,7 @@ class PackageOverviewDelPayPage extends Component {
     }
 
 
-    function makePaymentOptions() {
+    const makePaymentOptions = () => {
       var options = [
         { label: 'Platební karta', value: 1, price: 55 },
         { label: 'PayPal', value: 2, price: 0 },

@@ -31,23 +31,26 @@ class Product extends Component {
       });
     }
     newCart.packages.forEach(_package => {
-      let willInsert = true;
-      if (
-        _package.isCreating &&
-        _package.items.length >= 9 &&
-        this.product.category !== PACKAGE_CATEGORY_PATH
-      ) {
-        willInsert = false;
-      }
-      if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
-        _package.items.forEach(item => {
-          if (item.category === PACKAGE_CATEGORY_PATH) {
-            willInsert = false;
-          }
-        });
-      }
-      if (willInsert) {
-        _package.items.push(this.props.product);
+      if (_package.isCreating) {
+        let willInsert = true;
+        if (
+          _package.items.length >= 9 &&
+          this.props.product.category !== PACKAGE_CATEGORY_PATH
+        ) {
+          alert('Maximální počet produktů v balíčku je 9');
+          willInsert = false;
+        }
+        if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
+          _package.items.forEach(item => {
+            if (item.category === PACKAGE_CATEGORY_PATH) {
+              alert('V balíčku již máme vybrané balení, pokud ho chcete změnit, nejprve odeberte aktuálně vybrané.');
+              willInsert = false;
+            }
+          });
+        }
+        if (willInsert) {
+          _package.items.push(this.props.product);
+        }
       }
     });
     this.props.updateCart(newCart);

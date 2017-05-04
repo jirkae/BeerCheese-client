@@ -49,7 +49,7 @@ class PriceCalculation extends Component {
                         </tbody>
                     </Table>
                 </CardBlock>
-                <CardFooter>{localizedTexts.PackageOverview.priceCalculation.total}: <strong>{packagesPrice + shippingPrice} Kč</strong></CardFooter>
+                <CardFooter>{localizedTexts.PackageOverview.priceCalculation.total}: <strong>{(packagesPrice + shippingPrice).toFixed(2)} Kč</strong></CardFooter>
             </Card>
         );
     }

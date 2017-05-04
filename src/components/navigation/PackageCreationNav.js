@@ -3,64 +3,128 @@ import { Link } from 'react-router';
 import { Row, Col, Button, NavLink, Nav, ButtonGroup } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 import { connect } from 'react-redux';
+import { PACKAGE_CATEGORY_PATH } from '../../util/util';
 
 
 const otherLinks = [
-/*  {
-    name: localizedTexts.PackageCreationNav.beer,
-    link: "/create-package",
-  },
-  {
-    name: localizedTexts.PackageCreationNav.supplements,
-    link: "/create-package/supplement",
-  },
-  {
-    name: localizedTexts.PackageCreationNav.packages,
-    link: "/create-package/package",
-  },*/
+  /*  {
+      name: localizedTexts.PackageCreationNav.beer,
+      link: "/create-package",
+    },
+    {
+      name: localizedTexts.PackageCreationNav.supplements,
+      link: "/create-package/supplement",
+    },
+    {
+      name: localizedTexts.PackageCreationNav.packages,
+      link: "/create-package/package",
+    },*/
   {
     name: localizedTexts.PackageCreationNav.message,
     link: "/create-package/message",
+    validation: (cart) => {
+      let isValidate = false;
+      cart.packages.forEach((_package) => {
+        if (_package.isCreating) {
+          _package.items.forEach((item) => {
+            if (item.category === PACKAGE_CATEGORY_PATH) {
+              isValidate = true;
+            }
+          });
+        }
+      });
+      return isValidate;
+    },
+    validationMsg: 'vyberte balení'
   },
   {
     name: localizedTexts.PackageCreationNav.summary,
     link: "/create-package/summary",
+    validation: (cart) => {return true;}
   },
 ];
 
 class PackageOverviewNav extends Component {
 
-  render() {
-    var links = [];
-    const {categories} = this.props.categories;
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentLinkIndex: 0,
+      links: otherLinks
+    }
+  }
+
+  componentDidMount() {
+    this.updateCurrentLinkIndex();
+  }
+
+  componentWillReceiveProps(props, newProps) {
+    this.updateLinks(props);
+  }
+
+  doRedirect(link) {
+    if (link.validation(this.props.cart)) {
+      this.context.router.push(link.link);
+      this.updateCurrentLinkIndex();
+    } else {
+      alert(link.validationMsg);
+    }
+  }
+
+  updateCurrentLinkIndex() {
+    this.state.links.every((link, i) => {
+      if (link.link === this.context.router.getCurrentLocation().pathname + this.context.router.getCurrentLocation().search) {
+        this.setState({ currentLinkIndex: i });
+        return false;
+      }
+      return true;
+    });
+  }
+
+  updateLinks(props) {
+    const { categories } = props.categories;
+    let links = [];
     if (categories !== undefined && categories !== null) {
       categories.forEach((category) => {
         category = category.category;
         if (typeof category.mainCategory === 'undefined') {
-          links.push({
+          let link = {
             name: category.name,
-            link: "/create-package?category=" + category.id
-          });
+            link: "/create-package?category=" + category.id,
+          };
+          if (links.length === 0) {
+            link.validation = (cart) => {return true;};
+          } else {
+            link.validation = (cart) => {
+              let isValidate = false;
+              cart.packages.forEach((_package) => {
+                if (_package.isCreating) {
+                  isValidate = _package.items.length > 0;
+                }
+              });
+              return isValidate;
+            };
+            link.validationMsg = 'Vyberte alespoň 1 pivo';
+          }
+          links.push(link);
         }
       });
     }
     links = links.concat(otherLinks);
+    this.setState({ links: links });
+    setTimeout(() => {
+      this.updateCurrentLinkIndex();
+    }, 50);
+  }
 
-    const getCurrentIndex = () => {
-      let currentLinkIndex;
-      links.forEach((link, i) => {
-        if (link.link === this.context.router.getCurrentLocation().pathname) {
-          currentLinkIndex = i;
-        }
-      });
-      return currentLinkIndex;
-    };
+  render() {
+    const { currentLinkIndex, links } = this.state;
 
     const backNextButton = (modifyIndex, text) => {
-      const currentLinkIndex = getCurrentIndex();
       if (typeof links[currentLinkIndex + modifyIndex] !== 'undefined') {
         return (
-          <NavLink tag={Link} to={links[currentLinkIndex + modifyIndex].link}><Button>{text}</Button></NavLink>
+          <NavLink tag={Link}
+            onClick={() => { this.doRedirect(links[currentLinkIndex + modifyIndex]) }}><Button>{text}</Button></NavLink>
         );
       } else {
         return null;
@@ -77,7 +141,7 @@ class PackageOverviewNav extends Component {
             <ButtonGroup className="mr-auto ml-auto">
               {links.map((link, i) => {
                 return (
-                  <Button key={i} onClick={() => {this.context.router.push(link.link)}}>{link.name}</Button>
+                  <Button key={i} onClick={() => { this.doRedirect(link); }}>{link.name}</Button>
                 );
               })}
             </ButtonGroup>
@@ -97,7 +161,8 @@ PackageOverviewNav.contextTypes = {
 }
 
 const mapSateToProps = state => ({
-  categories: state.categories
+  categories: state.categories,
+  cart: state.cart
 });
 
-export default connect(mapSateToProps, { })(PackageOverviewNav);
+export default connect(mapSateToProps, {})(PackageOverviewNav);
