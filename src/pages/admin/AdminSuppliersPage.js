@@ -30,6 +30,22 @@ class AdminSuppliersPage extends React.Component {
       });
   }
 
+  refreshOnEdit = (updatedSupplier) => {
+    let updatedSuppliers = this.state.suppliers.map((supplier) => {
+      if(supplier.id === updatedSupplier.id)
+        return updatedSupplier;
+      return supplier;
+    });
+    this.setState({suppliers: updatedSuppliers})
+  };
+
+  refreshOnCreate = (newSupplier) => {
+    let { suppliers } = this.state;
+    suppliers.push(newSupplier);
+
+    this.setState({suppliers})
+  };
+
   getTableContent = () => {
     return this.state.suppliers.map(supplier => {
       return (
@@ -41,7 +57,10 @@ class AdminSuppliersPage extends React.Component {
               onClick={() =>
                 this.props.openModal({
                   name: 'editSupplierAdmin',
-                  data: supplier
+                  data: {
+                    ...supplier,
+                    refreshCB: this.refreshOnEdit
+                  }
                 })}
             >
               <i className="fa fa-pencil" />
@@ -59,6 +78,17 @@ class AdminSuppliersPage extends React.Component {
           <h1 className="display-4">{localizedTexts.NavBar.suppliers}</h1>
         </Jumbotron>
         <Container>
+          <Button
+            onClick={() =>
+              this.props.openModal({
+                name: 'newSupplierAdmin',
+                data: {
+                    refreshCB: this.refreshOnCreate
+                  }
+              })}
+          >
+            {localizedTexts.AdminSuppliersPage.btnAddSupplier}
+          </Button>
           <Table striped>
             <thead>
               <tr>
@@ -71,12 +101,6 @@ class AdminSuppliersPage extends React.Component {
               {this.getTableContent()}
             </tbody>
           </Table>
-          <Button
-            onClick={() =>
-              this.props.openModal({ name: 'newSupplierAdmin', data: null })}
-          >
-            {localizedTexts.AdminSuppliersPage.btnAddSupplier}
-          </Button>
         </Container>
       </div>
     );

@@ -17,8 +17,9 @@ export default class EditSupplierAdmin extends React.Component {
   onSubmit = (event) => {
     event.preventDefault();
     api.put('suppliers/' + this.props.data.id, {supplier: this.state})
-      .then(() => {
+      .then(response => {
         this.props.hideModals();
+        this.props.data.refreshCB(response.data.supplier);
       })
       .catch(response => {
         console.log('error ', response);
@@ -61,7 +62,7 @@ export default class EditSupplierAdmin extends React.Component {
                   <Col sm={9}>
                     <InputGroup>
                       <Input defaultValue={this.props.data.deliveryTime} required type="number"
-                             onChange={this.onInputChange}
+                             onChange={this.onInputChange} min="0"
                              name="deliveryTime" id="deliveryTime"/>
                       <InputGroupAddon>Dny</InputGroupAddon>
                     </InputGroup>

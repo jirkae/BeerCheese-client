@@ -14,7 +14,9 @@ export default class NewSupplierAdmin extends React.Component {
     event.preventDefault();
     api.post('suppliers', {supplier: this.state})
       .then(data => {
+        console.log(data);
         this.props.hideModals();
+        this.props.data.refreshCB(data.data.supplier);
       })
       .catch(response => {
         console.log('error ', response);
@@ -54,7 +56,7 @@ export default class NewSupplierAdmin extends React.Component {
                   <Label for="deliveryTime" sm={3}>Dodací lhůta</Label>
                   <Col sm={9}>
                     <InputGroup>
-                      <Input onChange={this.onInputChange} required type="number" name="deliveryTime" id="deliveryTime"/>
+                      <Input onChange={this.onInputChange} required type="number" name="deliveryTime" id="deliveryTime" min="0"/>
                       <InputGroupAddon>Dny</InputGroupAddon>
                     </InputGroup>
                   </Col>
