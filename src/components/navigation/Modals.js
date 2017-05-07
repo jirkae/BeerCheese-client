@@ -15,7 +15,7 @@ const Modals = (props) => {
   return(
     <div>
       {props.openModal.name === 'productDetails' ? <ProductDetails data={props.openModal.data} hideModals={props.hideModals}/> : ''}
-      {props.openModal.name === 'newProductAdmin' ? <NewProductAdmin hideModals={props.hideModals}/> : ''}
+      {props.openModal.name === 'newProductAdmin' ? <NewProductAdmin data={props.openModal.data} hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editProductAdmin' ? <EditProductAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editCustomerAdmin' ? <EditCustomerAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'newSupplierAdmin' ? <NewSupplierAdmin hideModals={props.hideModals}/> : ''}

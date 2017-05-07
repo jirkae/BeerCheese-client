@@ -39,6 +39,13 @@ class AdminProductsPage extends React.Component {
     this.setState({products: updatedProducts})
   };
 
+  refreshOnCreate = (newProduct) => {
+    let { products } = this.state;
+    products.push(newProduct);
+
+    this.setState({products})
+  };
+
   getTableContent = () => {
     return this.state.products.map(product => {
       return (
@@ -73,7 +80,12 @@ class AdminProductsPage extends React.Component {
         </Jumbotron>
         <Container>
           <Button
-            onClick={() => this.props.openModal({name: 'newProductAdmin', data: null})}
+            onClick={() => this.props.openModal({
+              name: 'newProductAdmin',
+              data: {
+                refreshCB: this.refreshOnCreate
+              }
+            })}
           >
             {localizedTexts.AdminProductsPage.btnAddProduct}
           </Button>

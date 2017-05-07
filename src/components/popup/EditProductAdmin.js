@@ -209,7 +209,7 @@ export default class EditProductAdmin extends React.Component {
   };
 
   getForm = () => {
-    if(this.state.product.name) {
+    if(this.state.product.id) {
       const supplier = parseInt(this.state.product.supplier.replace(SUPPLIERS_API_PREFIX, ''), 10);
       return (
         <Form onSubmit={this.onSubmit}>
@@ -228,7 +228,7 @@ export default class EditProductAdmin extends React.Component {
             <Col sm={8}>
               <InputGroup>
                 <Input value={this.state.product.price}
-                       onChange={this.onInputChange}
+                       onChange={this.onInputChange} min="0"
                        required type="number" name="price" id="price"/>
                 <InputGroupAddon>Kč</InputGroupAddon>
               </InputGroup>
@@ -240,7 +240,7 @@ export default class EditProductAdmin extends React.Component {
             <Col sm={8}>
               <InputGroup>
                 <Input value={this.state.product.priceAfterDiscount}
-                       onChange={this.onInputChange}
+                       onChange={this.onInputChange} min="0"
                        type="number" name="priceAfterDiscount" id="priceAfterDiscount"/>
                 <InputGroupAddon>Kč</InputGroupAddon>
               </InputGroup>
@@ -251,8 +251,8 @@ export default class EditProductAdmin extends React.Component {
             <Label for="quantity" sm={4}>Skladem</Label>
             <Col sm={8}>
               <InputGroup>
-                <Input value={this.state.product.quantity}
-                       onChange={this.onInputChange}
+                <Input value={this.state.product.quantity} required
+                       onChange={this.onInputChange} min="0"
                        type="number" name="quantity" id="quantity"/>
                 <InputGroupAddon>Ks</InputGroupAddon>
               </InputGroup>
