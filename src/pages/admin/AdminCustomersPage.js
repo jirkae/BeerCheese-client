@@ -35,6 +35,15 @@ class AdminCustomersPage extends React.Component {
       });
   }
 
+  refreshOnEdit = (updatedCustomer) => {
+    let updatedCustomers = this.state.customers.map((customer) => {
+      if(customer.id === updatedCustomer.id)
+        return updatedCustomer;
+      return customer;
+    });
+    this.setState({customers: updatedCustomers})
+  };
+
   getTableContent = () => {
     return this.state.customers.map(user => {
       return (
@@ -46,7 +55,13 @@ class AdminCustomersPage extends React.Component {
           <td>
             <Button
               onClick={() =>
-                this.props.openModal({name: 'editCustomerAdmin', data: user})}
+                this.props.openModal({
+                  name: 'editCustomerAdmin',
+                  data: {
+                    ...user,
+                    refreshCB: this.refreshOnEdit
+                  }
+                })}
             >
               <i className="fa fa-pencil"/>
             </Button>

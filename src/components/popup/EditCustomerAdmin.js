@@ -48,6 +48,7 @@ export default class EditCustomerAdmin extends React.Component {
     };
     api.put('users/' + this.props.data.id, updatedUser)
       .then(() => {
+        this.props.data.refreshCB({...this.state});
         this.props.hideModals();
       })
       .catch(error => {
