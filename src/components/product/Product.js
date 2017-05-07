@@ -74,8 +74,13 @@ class Product extends Component {
             alt="product"
             style={{ alignSelf: 'center', width: 'auto', maxHeight: '200px' }}
             onClick={() => {
-              openModal({ name: 'productDetails', data: product });
-            }}
+              openModal({ name: 'productDetails', data: {
+                ...product,
+                image: APP_URL + product.image
+              }
+              });
+              }
+            }
           />
         </LazyLoad>
         <CardBlock>

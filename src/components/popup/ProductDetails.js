@@ -19,7 +19,8 @@ export default props => {
           <Col>
             <img
               className="img-fluid"
-              src="https://placeholdit.imgix.net/~text?txtsize=33&amp;txt=318%C3%97180&amp;w=318&amp;h=180"
+              src={props.data.image}
+              style={{ alignSelf: 'center', width: 'auto', maxHeight: '200px' }}
               alt="Card cap"
             />
           </Col>
