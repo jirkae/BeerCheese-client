@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Modal, ModalBody, Container, Row, Form, FormGroup,
-  Label, Input, Button, Col
+  Label, Input, Button, Col, Alert
 } from 'reactstrap';
 
 import api from '../../api';
@@ -13,7 +13,8 @@ export default class EditCustomerAdmin extends React.Component {
     lastName: '',
     birthday: '',
     email: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    error: null
   };
 
   componentWillMount() {
@@ -34,6 +35,12 @@ export default class EditCustomerAdmin extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    const pattern =/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+    if(!pattern.test(this.state.birthday)){
+      this.setState({error: 'Datum musí být ve formátu 13/01/1999'});
+      return;
+    }
+
     let updatedUser = {
       user: {
         firstName: this.state.firstName,
@@ -71,7 +78,12 @@ export default class EditCustomerAdmin extends React.Component {
             <br/>
             <Row>
               <Form onSubmit={this.onSubmit}>
-
+                {this.state.error
+                  ?
+                  <Alert color="danger">{this.state.error}</Alert>
+                  :
+                  ''
+                }
                 <FormGroup row>
                   <Label for="firstName" sm={4}>Jméno</Label>
                   <Col sm={8}>

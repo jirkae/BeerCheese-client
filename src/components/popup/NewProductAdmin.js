@@ -115,7 +115,6 @@ export default class NewProductAdmin extends React.Component {
   };
 
   buildNewProductParams = () => {
-    console.log(this.state.subcategory, this.state.category, this.state.subcategory ? this.state.subcategory : this.state.category)
     const product = {
       product: {
         name: this.state.name,
@@ -127,7 +126,6 @@ export default class NewProductAdmin extends React.Component {
         supplier: "/api/suppliers/" + this.supplier
       }
     };
-    console.log(product);
     return product;
   };
 
@@ -146,8 +144,8 @@ export default class NewProductAdmin extends React.Component {
 
   renderSubCategoryOptions = () => {
     return this.state.subCategories.map(category => {
-      if(!this.state.subcategory)
-        this.setState({subcategory: category.id});
+      if(!this.subcategory)
+        this.subcategory = category.id;
       return (
         <option key={category.id} value={category.id}>{category.name}</option>
       );
