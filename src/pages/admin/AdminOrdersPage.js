@@ -18,10 +18,19 @@ class AdminOrdersPage extends React.Component {
     api.get('orders')
       .then(response => {
         if (response) {
-          this.setState({
-            orders: response.data.orders.items.map(item => {
-              return item.order;
-            })
+          response.data.orders.items.map(item => {
+            api.get(item.order.user.replace('/api', ''))
+              .then(responseUser => {
+                console.log(responseUser);
+                let orders = this.state.orders;
+                orders.push({
+                  ...item.order,
+                  user: responseUser.data.user.firstName + ' ' + responseUser.data.user.lastName
+                })
+                this.setState({orders});
+              });
+
+            return null;
           });
         }
       })
@@ -29,6 +38,15 @@ class AdminOrdersPage extends React.Component {
         console.log('error ', response);
       });
   }
+
+  refreshOnEdit = (updatedOrder) => {
+    let updatedOrders = this.state.orders.map((order) => {
+      if(order.id === updatedOrder.id)
+        return updatedOrder;
+      return order;
+    });
+    this.setState({orders: updatedOrders})
+  };
 
   getTableContent = () => {
     return this.state.orders.map(order => {
@@ -39,9 +57,15 @@ class AdminOrdersPage extends React.Component {
           <td>{order.status}</td>
           <td>
             <Button
-              onClick={() => this.props.openModal({name: 'editOrderAdmin', data: order})}
+              onClick={() => this.props.openModal({
+                name: 'editOrderAdmin',
+                data: {
+                  ...order,
+                  refreshCB: this.refreshOnEdit
+                }
+              })}
             >
-              <i className="fa fa-pencil"/>
+              <i className="fa fa-tasks"/>
             </Button>
           </td>
         </tr>
