@@ -18,7 +18,7 @@ const Modals = (props) => {
       {props.openModal.name === 'newProductAdmin' ? <NewProductAdmin data={props.openModal.data} hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editProductAdmin' ? <EditProductAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editCustomerAdmin' ? <EditCustomerAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
-      {props.openModal.name === 'newSupplierAdmin' ? <NewSupplierAdmin hideModals={props.hideModals}/> : ''}
+      {props.openModal.name === 'newSupplierAdmin' ? <NewSupplierAdmin data={props.openModal.data} hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editSupplierAdmin' ? <EditSupplierAdmin data={props.openModal.data} hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'editOrderAdmin' ? <EditOrderAdmin data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
       {props.openModal.name === 'alert' ? <Alert data={props.openModal.data}  hideModals={props.hideModals}/> : ''}
