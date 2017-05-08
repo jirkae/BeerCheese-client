@@ -30,6 +30,22 @@ class AdminProductsPage extends React.Component {
       });
   }
 
+  refreshOnEdit = (updatedProduct) => {
+    let updatedProducts = this.state.products.map((product) => {
+      if(product.id === updatedProduct.id)
+        return updatedProduct;
+      return product;
+    });
+    this.setState({products: updatedProducts})
+  };
+
+  refreshOnCreate = (newProduct) => {
+    let { products } = this.state;
+    products.push(newProduct);
+
+    this.setState({products})
+  };
+
   getTableContent = () => {
     return this.state.products.map(product => {
       return (
@@ -40,7 +56,13 @@ class AdminProductsPage extends React.Component {
           <td>
             <Button
               onClick={() =>
-                this.props.openModal({name: 'editProductAdmin', data: product})}
+                this.props.openModal({
+                  name: 'editProductAdmin',
+                  data: {
+                    ...product,
+                    refreshCB: this.refreshOnEdit
+                  }
+                })}
             >
               <i className="fa fa-pencil"/>
             </Button>
@@ -57,6 +79,16 @@ class AdminProductsPage extends React.Component {
           <h1 className="display-4">{localizedTexts.NavBar.products}</h1>
         </Jumbotron>
         <Container>
+          <Button
+            onClick={() => this.props.openModal({
+              name: 'newProductAdmin',
+              data: {
+                refreshCB: this.refreshOnCreate
+              }
+            })}
+          >
+            {localizedTexts.AdminProductsPage.btnAddProduct}
+          </Button>
           <Table striped>
             <thead>
             <tr>
@@ -70,11 +102,6 @@ class AdminProductsPage extends React.Component {
             {this.getTableContent()}
             </tbody>
           </Table>
-          <Button
-            onClick={() => this.props.openModal({name: 'newProductAdmin', data: null})}
-          >
-            {localizedTexts.AdminProductsPage.btnAddProduct}
-          </Button>
         </Container>
       </div>
     );

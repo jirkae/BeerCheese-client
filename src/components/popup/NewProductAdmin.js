@@ -6,8 +6,6 @@ import {
 
 import api, { imageApi } from '../../api';
 
-const IMAGE_BOUNDARY = '--------------------imageboundary';
-
 export default class NewProductAdmin extends React.Component {
 
   state = {
@@ -18,6 +16,8 @@ export default class NewProductAdmin extends React.Component {
     quantity: 0,
     description: ""
   };
+  supplier = null;
+  subcategory = null;
 
   componentDidMount() {
     this.loadSuppliers();
@@ -45,10 +45,16 @@ export default class NewProductAdmin extends React.Component {
     api.get('categories')
       .then(response => {
         if (response) {
+          let allCategories = response.data.categories.items.map(item => {
+            return item.category
+          });
+          let mainCategories = allCategories.filter(category => {
+            if(!category.mainCategory)
+              return category;
+            return null;
+          });
           this.setState({
-            categories: response.data.categories.items.map(item => {
-              return item.category
-            })
+            categories: mainCategories
           });
         }
       })
@@ -78,6 +84,7 @@ export default class NewProductAdmin extends React.Component {
     api.post('products', this.buildNewProductParams())
       .then(response => {
         let imageUrl = response.data.product.image;
+        this.props.data.refreshCB(response.data.product);
         this.uploadImage(imageUrl);
       })
       .catch(response => {
@@ -86,36 +93,32 @@ export default class NewProductAdmin extends React.Component {
   };
 
   uploadImage = (url) => {
-    let headers = {
-      headers: {'Content-Type': 'multipart/form-data; boundary=' + IMAGE_BOUNDARY}
-    };
-    let body = IMAGE_BOUNDARY +
-      '\r\nContent-Disposition: form-data; name="image"; filename="image.jpg"' +
-      '\r\nContent-Type: image/jpeg\r\n\r\n' +
-      this.state.image +
-      '\r\n' + IMAGE_BOUNDARY + '\r\n';
+    let data = new FormData();
+    data.append('image', this.state.image, 'image');
 
-    imageApi.post(url, body, headers)
+    imageApi.post(url, data)
       .then(() => {
         this.props.hideModals();
       })
       .catch(error => {
         console.log('error uploading image ', error);
+        this.props.hideModals();
       });
   };
 
   buildNewProductParams = () => {
-    return {
+    const product = {
       product: {
         name: this.state.name,
         price: this.state.price,
         priceAfterDiscount: this.state.priceAfterDiscount,
         quantity: this.state.quantity,
         description: this.state.description || "",
-        category: "/api/categories/" + this.state.category,
-        supplier: "/api/suppliers/" + this.state.supplier
+        category: "/api/categories/" + (this.subcategory ? this.subcategory : this.state.category),
+        supplier: "/api/suppliers/" + this.supplier
       }
     };
+    return product;
   };
 
   onCategoryChosen = (event) => {
@@ -133,6 +136,8 @@ export default class NewProductAdmin extends React.Component {
 
   renderSubCategoryOptions = () => {
     return this.state.subCategories.map(category => {
+      if(!this.subcategory)
+        this.subcategory = category.id;
       return (
         <option key={category.id} value={category.id}>{category.name}</option>
       );
@@ -141,6 +146,8 @@ export default class NewProductAdmin extends React.Component {
 
   renderSupplierOptions = () => {
     return this.state.suppliers.map(supplier => {
+      if(!this.supplier)
+        this.supplier = supplier.id;
       return (
         <option key={supplier.id} value={supplier.id}>{supplier.name}</option>
       );
@@ -148,21 +155,21 @@ export default class NewProductAdmin extends React.Component {
   };
 
   handleImageChange = (event) => {
-    let reader = new FileReader();
     let file = event.target.files[0];
 
-    reader.onload = (upload) => {
-      this.setState({
-        image: upload.target.result
-      });
-    };
-    reader.readAsDataURL(file);
+    this.setState({image:file});
   };
 
   onInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
+    const { name, value } = event.target;
+    if(name === 'subcategory')
+      this.subcategory = value;
+    else if(name === 'supplier')
+      this.supplier = value;
+    else
+      this.setState({
+        [name]: value
+      })
   };
 
   render() {
@@ -186,7 +193,7 @@ export default class NewProductAdmin extends React.Component {
                   <Label for="price" sm={4}>Cena</Label>
                   <Col sm={8}>
                     <InputGroup>
-                      <Input onChange={this.onInputChange} required type="number" name="price" id="price"/>
+                      <Input onChange={this.onInputChange} required type="number" min="0" name="price" id="price"/>
                       <InputGroupAddon>Kč</InputGroupAddon>
                     </InputGroup>
                   </Col>
@@ -196,7 +203,7 @@ export default class NewProductAdmin extends React.Component {
                   <Label for="priceAfterDiscount" sm={4}>Cena po slevě</Label>
                   <Col sm={8}>
                     <InputGroup>
-                      <Input onChange={this.onInputChange} type="number" name="priceAfterDiscount"
+                      <Input onChange={this.onInputChange} type="number" name="priceAfterDiscount" min="0"
                              id="priceAfterDiscount"/>
                       <InputGroupAddon>Kč</InputGroupAddon>
                     </InputGroup>
@@ -207,7 +214,7 @@ export default class NewProductAdmin extends React.Component {
                   <Label for="quantity" sm={4}>Skladem</Label>
                   <Col sm={8}>
                     <InputGroup>
-                      <Input onChange={this.onInputChange} type="number" name="quantity" id="quantity"
+                      <Input onChange={this.onInputChange} type="number" name="quantity" id="quantity" required min="0"
                              defaultValue={this.state.quantity}/>
                       <InputGroupAddon>Ks</InputGroupAddon>
                     </InputGroup>

@@ -1,120 +1,154 @@
 import React from 'react';
 import {
-  Modal, ModalBody, Container, Row, Form, FormGroup,
-  Label, Input, Button, Col
+  Modal, ModalBody, Container, Row, Button, Col
 } from 'reactstrap';
+import Loading from '../images/Loading';
 
 import api from '../../api';
 
-const SHIPPINGS_URL = '/api/shippings/';
-const USERS_URL = '/api/users/';
+const API = '/api';
+const CANCELLED = 'Canceled';
 
 export default class EditOrderAdmin extends React.Component {
 
   state = {
-    users: [],
-    shippings: [],
-    user: this.props.data.user,
-    status: this.props.data.status,
-    paymentType: this.props.data.paymentType,
-    shipping: this.props.data.shipping,
-    shippingAddress: this.props.data.shippingAddress,
-    billingAddress: this.props.data.billingAddress,
+    id: null
   };
 
   componentWillMount() {
-    this.loadUsers();
-    this.loadShippings();
+    api.get('orders/'+this.props.data.id)
+      .then(response => {
+        const { order } = response.data;
+        this.setState({
+          ...order
+        });
+
+        api.get(order.user.replace(API, ''))
+          .then(responseUser => {
+            this.setState({
+                user: responseUser.data.user.firstName + ' ' + responseUser.data.user.lastName
+            });
+          });
+
+        api.get(order.shipping.replace(API, ''))
+          .then(responseShipping => {
+            this.setState({
+              shipping: responseShipping.data.shipping.name
+            });
+          });
+      })
+      .catch(response => {
+        console.log('error ', response);
+      });
   }
-
-  loadUsers = () => {
-    api.get('users')
-      .then((response) => {
-        if (response) {
-          this.setState({
-            users: response.data.users.items.map((item) => {
-              return item.user;
-            })
-          });
-        }
-      })
-      .catch(response => {
-        console.log('error ', response);
-      });
-  };
-
-  loadShippings = () => {
-    api.get('shippings')
-      .then((response) => {
-        if (response) {
-          this.setState({
-            shippings: response.data.shippings.items.map(item => {
-              return item.shipping
-            })
-          });
-        }
-      })
-      .catch(response => {
-        console.log('error ', response);
-      });
-  };
 
   onSubmit = (event) => {
     event.preventDefault();
-    let data = {
-      order: {
-        user: this.state.user,
-        status: this.state.status,
-        paymentType: this.state.paymentType,
-        shipping: this.state.shipping,
-        shippingAddress: this.state.shippingAddress,
-        billingAddress: this.state.billingAddress,
-      }
-    };
-    api.put('orders/' + this.props.data.id, data)
-      .then(() => {
-        this.props.hideModals();
-      })
-      .catch(response => {
-        console.log('error ', response);
-      });
+    if(confirm('Opravdu checte objednávku zrušit?')) {
+      api.get('orders/' + this.props.data.id)
+        .then((response) => {
+          const order = response.data.order;
+          const newOrder = {
+            order: {
+              user: order.user,
+              status: CANCELLED,
+              paymentType: order.paymentType,
+              shipping: order.shipping,
+              shippingAddress: order.shippingAddress,
+              billingAddress: order.billingAddress,
+              discount: order.discount,
+              price: order.price
+            }
+          };
+          console.log(newOrder);
+          api.put('orders/' + this.props.data.id, newOrder)
+            .then(() => {
+              this.props.hideModals();
+              this.props.data.refreshCB({
+                ...this.state,
+                status: CANCELLED
+              });
+            })
+            .catch(response => {
+              console.log('error ', response);
+            });
+        });
+    }
   };
 
-  onInputChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    })
-  };
+  getData = () => {
+    if(this.state.id){
 
-  onSelectShipping = (event) => {
-    let shippingId = event.target.value;
-    this.setState({
-      shipping: SHIPPINGS_URL + shippingId
-    })
-  };
-
-  renderShippingOptions = () => {
-    return this.state.shippings.map(option => {
       return (
-        <option key={option.id} value={option.id}>{option.name}</option>
-      );
-    });
-  };
+        <div>
 
-  renderUserOptions = () => {
-    return this.state.users.map(option => {
+          <Row>
+            <Col sm={4}>Status: </Col>
+            <Col sm={8}>
+              {this.state.status}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>Způsob platby: </Col>
+            <Col sm={8}>
+              {this.state.paymentType}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>Sleva: </Col>
+            <Col sm={8}>
+              {this.state.discount}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>Celková cena: </Col>
+            <Col sm={8}>
+              {this.state.price}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>Zákazník: </Col>
+            <Col sm={8}>
+              {
+                this.state.user.startsWith(API)
+                  ? <Loading/>
+                  : this.state.user
+              }
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>Způsob dodání: </Col>
+            <Col sm={8}>
+              {
+                this.state.shipping.startsWith(API)
+                  ? <Loading/>
+                  : this.state.shipping
+              }
+            </Col>
+          </Row>
+          {
+            this.state.status === CANCELLED
+            ? ''
+              :
+              <Row>
+                <Col sm={{size: 10, offset: 2}}>
+                  <Button type="submit" onClick={this.onSubmit}>Zrušit objednávku</Button>
+                </Col>
+              </Row>
+
+          }
+        </div>
+      )
+    }else{
       return (
-        <option key={option.id} value={option.id}>
-          {option.firstName} {option.lastName}
-        </option>
-      );
-    });
-  };
-
-  onSelectUser = (event) => {
-    this.setState({
-      user: USERS_URL + event.target.value
-    })
+        <Loading/>
+      )
+    }
   };
 
   render() {
@@ -123,57 +157,9 @@ export default class EditOrderAdmin extends React.Component {
         <ModalBody>
           <Container>
             <Row>
-              <h3>Upravit objednávku</h3>
-              <br/> <br/>
-              <Form onSubmit={this.onSubmit}>
-
-                <FormGroup row>
-                  <Label for="user" sm={4}>Zákazník</Label>
-                  <Col sm={8}>
-                    <Input required type="select" name="user" id="user"
-                           onChange={this.onSelectUser}
-                    >
-                      {this.renderUserOptions()}
-                    </Input>
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Label for="status" sm={4}>Status</Label>
-                  <Col sm={8}>
-                    <Input defaultValue={this.props.data.status}
-                           onChange={this.onInputChange}
-                           required type="text" name="status" id="status"/>
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Label for="paymentType" sm={4}>Způsob platby</Label>
-                  <Col sm={8}>
-                    <Input defaultValue={this.props.data.paymentType}
-                           onChange={this.onInputChange}
-                           required type="text" name="paymentType" id="paymentType"/>
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Label for="shipping" sm={4}>Způsob dodání</Label>
-                  <Col sm={8}>
-                    <Input required type="select" name="shipping" id="shipping"
-                           onChange={this.onSelectShipping}
-                    >
-                      {this.renderShippingOptions()}
-                    </Input>
-                  </Col>
-                </FormGroup>
-
-                <FormGroup check row>
-                  <Col sm={{size: 10, offset: 2}}>
-                    <Button type="submit">Upravit</Button>
-                  </Col>
-                </FormGroup>
-              </Form>
+              <h3>Detail objednávky</h3>
             </Row>
+            {this.getData()}
           </Container>
         </ModalBody>
       </Modal>
