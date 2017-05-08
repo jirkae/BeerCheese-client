@@ -1,16 +1,26 @@
 import React from 'react';
-import { Modal, ModalBody, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import {
+  Modal,
+  ModalBody,
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Alert
+} from 'reactstrap';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 
 class LoginModal extends React.Component {
 
-  state = { errors: {} };
+  state = { };
+  firstLoad = true;
 
   handleLogin = event => {
     event.preventDefault();
-
+    this.firstLoad = false;
     const { login } = this.props;
 
     login({
@@ -38,19 +48,21 @@ class LoginModal extends React.Component {
     return (
       <Modal isOpen={true} toggle={hideModals}>
         <ModalBody>
+          {auth.err && !this.firstLoad &&
+            <Alert color="danger">Neplatná kombinace uživatelského jména a hesla.</Alert>
+          }
           <Form onSubmit={this.handleLogin}>
             <FormGroup>
               <Label for="username">{localizedTexts.logIn.name}</Label>
-              <Input type="text" name="username" id="username" value={this.state.username} onChange={this.updateUsernameValue} />
+              <Input required type="text" name="username" id="username" value={this.state.username} onChange={this.updateUsernameValue} />
             </FormGroup>
             <FormGroup>
               <Label for="password">{localizedTexts.logIn.pass}</Label>
-              <Input type="password" name="password" id="password" value={this.state.password} onChange={this.updatePasswordValue} />
+              <Input required type="password" name="password" id="password" value={this.state.password} onChange={this.updatePasswordValue} />
             </FormGroup>
             <Button type="submit">{localizedTexts.logIn.btnSignIn}</Button>
           </Form>
           {auth.isFetching && <p>{localizedTexts.logIn.waiting}</p>}
-          {auth.err && <p color="warning">{localizedTexts.logIn.error} + ": " + {JSON.stringify(auth.err)}</p>}
         </ModalBody>
       </Modal>
     );
