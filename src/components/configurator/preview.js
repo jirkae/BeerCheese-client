@@ -18,7 +18,7 @@ class Preview extends Component {
     removeItem(itemToRemove) {
         let newCart = Object.assign({}, this.props.cart);
         newCart.packages.forEach((_package) => {
-            if (_package.isCreating) {
+            if (_package === this.props.currentPackage) {
                 _package.items.every((item, key) => {
                     if (item.id === itemToRemove.id) {
                         _package.items.splice(key, 1);
@@ -35,7 +35,7 @@ class Preview extends Component {
         const { cart } = this.props;
         if (cart.packages !== undefined && typeof cart.packages.length !== 'undefined') {
             return cart.packages.map((_package) => {
-                if (_package.isCreating) {
+                if (_package === this.props.currentPackage) {
                     return _package.items.map((item) => {
                         return (
                             <Card style={{ margin: '1%', width: '30%' }}>
@@ -59,7 +59,7 @@ class Preview extends Component {
         const { cart } = this.props;
         let price = 0;
         cart.packages.forEach(_package => {
-            if (_package.isCreating) {
+            if (_package === this.props.currentPackage) {
                 _package.items.forEach(item => {
                     price += item.price;
                 });
@@ -72,7 +72,7 @@ class Preview extends Component {
         const { cart } = this.props;
         let count = 0;
         cart.packages.forEach(_package => {
-            if (_package.isCreating) {
+            if (_package === this.props.currentPackage) {
                 count = _package.items.length;
             }
         });
@@ -84,7 +84,7 @@ class Preview extends Component {
         let isFilled = false;
         const { cart } = this.props;
         cart.packages.forEach((_package) => {
-            if (_package.isCreating) {
+            if (_package === this.props.currentPackage) {
                 isFilled = _package.text !== undefined && _package.text !== '';
             }
         });
@@ -95,7 +95,7 @@ class Preview extends Component {
         let isSelected = false;
         const { cart } = this.props;
         cart.packages.forEach((_package) => {
-            if (_package.isCreating) {
+            if (_package === this.props.currentPackage) {
                 _package.items.forEach((item) => {
                     if (item.category === PACKAGE_CATEGORY_PATH) {
                         isSelected = true;

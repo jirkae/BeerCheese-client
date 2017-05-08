@@ -6,20 +6,14 @@ import { connect } from 'react-redux';
 import { categoriesApi } from '../../actions/categories';
 //import PriceCalculation from '../../components/configurator/PriceCalculation';
 
-class CreatePackageRootPage extends Component {
+class EditPackageRootPage extends Component {
   componentDidMount() {
     this.props.categoriesApi();
   }
 
   getCurrentPackage() {
     const {cart} = this.props;
-    let currentPackage = {};
-    cart.packages.forEach((_package) => {
-      if (_package.isCreating) {
-        currentPackage = _package
-      }
-    });
-    return currentPackage;
+    return cart.packages[this.props.params.id];
   }
 
   render() {
@@ -51,5 +45,5 @@ const mapSateToProps = state => ({
 });
 
 export default connect(mapSateToProps, { categoriesApi })(
-  CreatePackageRootPage
+  EditPackageRootPage
 );

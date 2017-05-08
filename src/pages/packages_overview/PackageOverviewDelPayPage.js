@@ -5,6 +5,13 @@ import { shippingsApi } from '../../actions/shippings';
 import { updateCart } from '../../actions/cart';
 import { connect } from 'react-redux';
 
+export const paymentOptions = [
+  { label: 'Platební karta', value: 1, price: 55 },
+  { label: 'PayPal', value: 2, price: 0 },
+  { label: 'Bankovní převod', value: 3, price: 0 },
+  { label: 'Dobírka', value: 4, price: 0 },
+];
+
 class PackageOverviewDelPayPage extends Component {
   componentDidMount() {
     this.props.shippingsApi();
@@ -62,14 +69,7 @@ class PackageOverviewDelPayPage extends Component {
 
 
     const makePaymentOptions = () => {
-      var options = [
-        { label: 'Platební karta', value: 1, price: 55 },
-        { label: 'PayPal', value: 2, price: 0 },
-        { label: 'Bankovní převod', value: 3, price: 0 },
-        { label: 'Dobírka', value: 4, price: 0 },
-      ];
-
-      return makeOptions('payment', options);
+      return makeOptions('payment', paymentOptions);
     }
 
     return (

@@ -19,7 +19,7 @@ class Product extends Component {
     let newCart = Object.assign({}, this.props.cart);
     let createNewPackage = true;
     newCart.packages.forEach(_package => {
-      if (_package.isCreating) {
+      if (_package === this.props.currentPackage) {
         createNewPackage = false;
       }
     });
@@ -31,7 +31,7 @@ class Product extends Component {
       });
     }
     newCart.packages.forEach(_package => {
-      if (_package.isCreating) {
+      if (_package === this.props.currentPackage) {
         let willInsert = true;
         if (
           _package.items.length >= 9 &&
