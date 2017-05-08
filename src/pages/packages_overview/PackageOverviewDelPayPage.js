@@ -54,7 +54,6 @@ class PackageOverviewDelPayPage extends Component {
               onChange={(e) => {this.handlePaymentChange(data.value)}} 
               checked={cart !== undefined && cart.paymentType !== undefined && cart.paymentType === data.value} /> {data.label}</label>
             </Col>
-            <Col xs={4} className="text-right">{data.price}</Col>
           </Row>
         );
       });
