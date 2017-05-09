@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { Row, Col, Button, NavLink, Nav, ButtonGroup } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 import { connect } from 'react-redux';
+import { addressFields } from '../../pages/packages_overview/PackageOverviewDeliveryDetailsPage';
+import { isString } from '../../util/util';
 
 const links = [
   {
@@ -35,7 +37,28 @@ const links = [
   {
     name: localizedTexts.PackageOverviewNav.summary,
     link: "/package-overview/summary",
-    validation: (cart) => {return false}
+    validation: (cart) => {
+      const emailRegex = /^[a-z][a-zA-Z0-9_.]*(\.[a-zA-Z][a-zA-Z0-9_.]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+)?$/;
+      for (let key in addressFields) {
+        if (typeof cart.billingAddress === 'undefined' || !isString(cart.billingAddress[key]) || cart.billingAddress[key].length === 0) {
+          return false;
+        }
+        if (key === 'email' && !emailRegex.test(cart.billingAddress.email)) {
+          return false;
+        }
+      }
+      if (cart.differentShipping) {
+        for (let key in addressFields) {
+          if (typeof cart.shippingAddress === 'undefined' || !isString(cart.shippingAddress[key]) || cart.shippingAddress[key].length === 0) {
+            return false;
+          }
+          if (key === 'email' && !emailRegex.test(cart.shippingAddress.email)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
   },
 ];
 
@@ -57,7 +80,7 @@ class PackageOverviewNav extends Component {
       this.context.router.push(link.link);
       this.updateCurrentLinkIndex();
     } else {
-      alert('Vyplňte všechna povinná pole');
+      alert('Vyplňte správně všechna povinná pole');
     }
   }
 
@@ -94,7 +117,7 @@ class PackageOverviewNav extends Component {
             <ButtonGroup className="mr-auto ml-auto">
               {links.map((link, i) => {
                 return (
-                  <Button key={i} onClick={() => {this.doRedirect(link)}}>{link.name}</Button>
+                  <Button key={i} onClick={() => {this.doRedirect(link)}} color={i === this.state.currentLinkIndex ? 'info' : 'secondary'}>{link.name}</Button>
                 );
               })}
             </ButtonGroup>

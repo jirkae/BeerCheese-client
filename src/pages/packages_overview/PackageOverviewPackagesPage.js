@@ -45,7 +45,8 @@ class PackageOverviewPackagesPage extends Component {
           <td><Input type="number" value={_package.count} 
           onChange={(e) => {this.handleCountChange(key, e.target.value)}} style={{width: '80px'}}/></td>
           <td>{this.getPackagePrice(_package).toFixed(2)}</td>
-          <td><Button size="sm" color="secondary">{localizedTexts.PackageOverview.packages.edit}</Button></td>
+          <td><Button size="sm" color="secondary"
+            onClick={() => {this.context.router.push('/edit-package/' + key)}}>{localizedTexts.PackageOverview.packages.edit}</Button></td>
           <td><Button size="sm" color="secondary"
           onClick={(e) => {this.removePackage(key);}}>{localizedTexts.PackageOverview.packages.remove}</Button></td>
         </tr>
@@ -62,6 +63,11 @@ class PackageOverviewPackagesPage extends Component {
       </Table>
     );
   }
+}
+
+PackageOverviewPackagesPage.contextTypes = {
+  router: React.PropTypes.object,
+  location: React.PropTypes.object
 }
 
 const mapSateToProps = state => ({

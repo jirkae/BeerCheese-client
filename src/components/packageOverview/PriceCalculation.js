@@ -42,10 +42,6 @@ class PriceCalculation extends Component {
                                     <td className="text-right">{shippingPrice}</td>
                                 </tr>
                             }
-                            <tr>
-                                <td>{localizedTexts.PackageOverview.priceCalculation.payment}</td>
-                                <td className="text-right">23</td>
-                            </tr>
                         </tbody>
                     </Table>
                 </CardBlock>

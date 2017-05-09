@@ -21,11 +21,11 @@ const otherLinks = [
     },*/
   {
     name: localizedTexts.PackageCreationNav.message,
-    link: "/create-package/message",
-    validation: (cart) => {
+    link: "/message",
+    validation: (cart, currentPackage) => {
       let isValidate = false;
       cart.packages.forEach((_package) => {
-        if (_package.isCreating) {
+        if (_package === currentPackage) {
           _package.items.forEach((item) => {
             if (item.category === PACKAGE_CATEGORY_PATH) {
               isValidate = true;
@@ -39,7 +39,7 @@ const otherLinks = [
   },
   {
     name: localizedTexts.PackageCreationNav.summary,
-    link: "/create-package/summary",
+    link: "/summary",
     validation: (cart) => {return true;}
   },
 ];
@@ -63,8 +63,9 @@ class PackageOverviewNav extends Component {
   }
 
   doRedirect(link) {
-    if (link.validation(this.props.cart)) {
-      this.context.router.push(link.link);
+    const urlParts = this.context.router.getCurrentLocation().pathname.split('/');
+    if (link.validation(this.props.cart, this.props.currentPackage)) {
+      this.context.router.push('/' + urlParts[1] + (typeof urlParts[2] !== 'undefined' && parseInt(urlParts[2],10) >= 0 ? '/'+urlParts[2] : '') + link.link);
       this.updateCurrentLinkIndex();
     } else {
       alert(link.validationMsg);
@@ -72,8 +73,9 @@ class PackageOverviewNav extends Component {
   }
 
   updateCurrentLinkIndex() {
+    const urlParts = this.context.router.getCurrentLocation().pathname.split('/');
     this.state.links.every((link, i) => {
-      if (link.link === this.context.router.getCurrentLocation().pathname + this.context.router.getCurrentLocation().search) {
+      if ('/' + urlParts[1] + (typeof urlParts[2] !== 'undefined' && parseInt(urlParts[2],10) >= 0 ? '/'+urlParts[2] : '') + link.link === this.context.router.getCurrentLocation().pathname + this.context.router.getCurrentLocation().search) {
         this.setState({ currentLinkIndex: i });
         return false;
       }
@@ -90,7 +92,7 @@ class PackageOverviewNav extends Component {
         if (typeof category.mainCategory === 'undefined') {
           let link = {
             name: category.name,
-            link: "/create-package?category=" + category.id,
+            link: "?category=" + category.id,
           };
           if (links.length === 0) {
             link.validation = (cart) => {return true;};
@@ -98,7 +100,7 @@ class PackageOverviewNav extends Component {
             link.validation = (cart) => {
               let isValidate = false;
               cart.packages.forEach((_package) => {
-                if (_package.isCreating) {
+                if (_package === props.currentPackage) {
                   isValidate = _package.items.length > 0;
                 }
               });
@@ -141,7 +143,7 @@ class PackageOverviewNav extends Component {
             <ButtonGroup className="mr-auto ml-auto">
               {links.map((link, i) => {
                 return (
-                  <Button key={i} onClick={() => { this.doRedirect(link); }}>{link.name}</Button>
+                  <Button key={i} onClick={() => { this.doRedirect(link); }} color={i === this.state.currentLinkIndex ? 'info' : 'secondary'}>{link.name}</Button>
                 );
               })}
             </ButtonGroup>

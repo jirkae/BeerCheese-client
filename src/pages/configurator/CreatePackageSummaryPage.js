@@ -15,7 +15,7 @@ class CreatePackageSummaryPage extends Component {
     let text = '';
     const {cart} = this.props;
     cart.packages.forEach((_package) => {
-      if (_package.isCreating) {
+      if (_package === this.props.currentPackage) {
         text = _package.text;
       }
     })
@@ -25,7 +25,7 @@ class CreatePackageSummaryPage extends Component {
   addToCart() {
     let newCart = Object.assign({}, this.props.cart);
     newCart.packages.forEach((_package) => {
-        if (_package.isCreating) {
+        if (_package === this.props.currentPackage && _package.isCreating) {
             _package.isCreating = false;
         }
     });

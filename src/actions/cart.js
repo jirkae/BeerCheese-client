@@ -12,3 +12,5 @@ const defaultDispatchCart = (payload, reducer = cartReducer) =>
   defaultDispatch(CART, payload, reducer);
 
 export const updateCart = payload => defaultDispatchCart(payload);
+
+export const clearCart = () => defaultDispatchCart(Object.assign({}, {packages: []}));

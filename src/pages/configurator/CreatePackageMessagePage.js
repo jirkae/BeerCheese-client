@@ -16,7 +16,7 @@ class CreatePackageMessagePage extends Component {
 
   componentDidMount() {
     this.props.cart.packages.forEach((_package) => {
-      if (_package.isCreating) {
+      if (_package === this.props.currentPackage) {
         this.setState({
           text: _package.text,
           paperType: _package.paperType
@@ -30,7 +30,7 @@ class CreatePackageMessagePage extends Component {
     setTimeout(() => {
       let newCart = Object.assign({}, this.props.cart);
       newCart.packages.forEach((_package) => {
-          if (_package.isCreating) {
+          if (_package === this.props.currentPackage) {
               _package.text = this.state.text;
               _package.paperType = this.state.paperType;
           }
