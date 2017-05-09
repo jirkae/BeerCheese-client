@@ -70,8 +70,8 @@ class RegistrationPage extends React.Component {
   }
 
   handleYear(date){
-    var a = moment();
-    var b = moment(date);
+    let a = moment();
+    let b = moment(date);
     if( a.diff(b, 'years', true)<=18){
       this.props.openModal({
         name: 'alert',
