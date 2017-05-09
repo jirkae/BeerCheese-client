@@ -1,5 +1,17 @@
 import React from 'react';
+<<<<<<< HEAD
+import {
+  Col,
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Alert
+} from 'reactstrap';
+=======
 import { Col,Button, FormGroup, Label } from 'reactstrap';
+>>>>>>> feature/register-update
 import { browserHistory} from 'react-router';
 import { connect } from 'react-redux';
 import localizedTexts from '../text_localization/LocalizedStrings';
@@ -24,9 +36,13 @@ class RegistrationPage extends React.Component {
           birthdayValue: moment().format('DD/MM/YYYY'),
           phoneValue: '',
           verifyPasswordValue: '',
+<<<<<<< HEAD
+          error: null
+=======
           startDate: moment(),
           isAdult: false,
           passwordIsCorrect: false,
+>>>>>>> feature/register-update
       };
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -62,7 +78,8 @@ class RegistrationPage extends React.Component {
                 message: localizedTexts.registration.registrationSuccess
               }
             });
-      }).catch(function(response) {
+      }).catch(response => {
+        this.setState({error: response.response.data.message});
           console.log('error');
       });
 
@@ -128,7 +145,23 @@ class RegistrationPage extends React.Component {
         <br></br>
         <br></br>
         <Col sm={{ size: 6, push: 2, pull: 2, offset: 1 }}>
+<<<<<<< HEAD
+          <Form onSubmit={this.handleSubmit}>
+            {this.state.error
+              ?
+              <Alert color="danger">{this.state.error}</Alert>
+              :
+              ''
+            }
+            <FormGroup row>
+              <Label for="exampleEmail" sm={3}>{localizedTexts.registration.email}</Label>
+                <Col sm={9}>
+                    <Input required type="email" name="email" id="email" placeholder="Zadejte email" onChange={event => this.setState({emailValue: event.target.value})} />
+                </Col>
+            </FormGroup>
+=======
           <AvForm onValidSubmit={this.handleSubmit}>
+>>>>>>> feature/register-update
 
             <AvGroup row>
               <Label for="email" sm={3}>{localizedTexts.registration.email}</Label>
@@ -140,16 +173,27 @@ class RegistrationPage extends React.Component {
 
             <AvGroup row>
               <Label for="username" sm={3}>{localizedTexts.registration.username}</Label>
+<<<<<<< HEAD
+                <Col sm={9}>
+                    <Input required type="text" name="username" id="username" placeholder="Zadejte uživatelské jméno" onChange={event => this.setState({usernameValue: event.target.value})}/>
+                </Col>
+            </FormGroup>
+=======
               <Col sm={9}>
                 <AvInput name="username" type="text" id="username" placeholder="Zadejte uživatelské jméno" minLength="5" onChange={event => this.setState({usernameValue: event.target.value})} required />
               </Col>
               <AvFeedback>Špatně zadané uživatelské jméno!</AvFeedback>
             </AvGroup>
+>>>>>>> feature/register-update
 
             <AvGroup row>
               <Label for="password" sm={3}>{localizedTexts.registration.password}</Label>
                 <Col sm={9}>
+<<<<<<< HEAD
+                    <Input required type="password" name="password" id="password" placeholder="Zadejte heslo" onChange={event => this.setState({passwordValue: event.target.value})}/>
+=======
                     <AvInput type="password" name="password" id="password" placeholder="Zadejte heslo" minLength="5" onChange={event => this.setState({passwordValue: event.target.value})} required/>
+>>>>>>> feature/register-update
                 </Col>
                 <AvFeedback>Špatně zadané heslo!(musí být dlouhé min. 5 znaků)</AvFeedback>
             </AvGroup>
@@ -157,36 +201,69 @@ class RegistrationPage extends React.Component {
             <AvGroup row>
               <Label for="verifyPassword" sm={3}>{localizedTexts.registration.verifyPassword}</Label>
                 <Col sm={9}>
+<<<<<<< HEAD
+                    <Input required type="password" name="password" id="password" placeholder="Znovu zadejte heslo" onChange={event => this.setState({verifyPasswordValue: event.target.value})}/>
+=======
                     <AvInput type="password" name="verifyPassword" id="verifyPassword" placeholder="Znovu zadejte heslo" minLength="5" onChange={event => this.setState({verifyPasswordValue: event.target.value})} required/>
+>>>>>>> feature/register-update
                 </Col>
                 <AvFeedback>Špatně zadané heslo!(musí být dlouhé min. 5 znaků)</AvFeedback>
             </AvGroup>
 
             <AvGroup row>
               <Label for="first_name" sm={3}>{localizedTexts.registration.firstname}</Label>
+<<<<<<< HEAD
+                <Col sm={9}>
+                    <Input required type="text" name="first_name" id="first_name" placeholder="Zadejte křestní jméno" onChange={event => this.setState({nameValue: event.target.value})}/>
+                </Col>
+            </FormGroup>
+=======
               <Col sm={9}>
                 <AvInput name="first_name" type="text" id="first_name" placeholder="Zadejte křestní jméno"  onChange={event => this.setState({nameValue: event.target.value})} required />
               </Col>
               <AvFeedback>Špatně zadané jméno!</AvFeedback>
             </AvGroup>
+>>>>>>> feature/register-update
 
             <AvGroup row>
               <Label for="last_name" sm={3}>{localizedTexts.registration.lastname}</Label>
+<<<<<<< HEAD
+                <Col sm={9}>
+                    <Input required type="text" name="last_name" id="last_name" placeholder="Zadejte příjmení" onChange={event => this.setState({surnameValue: event.target.value})}/>
+                </Col>
+            </FormGroup>
+=======
               <Col sm={9}>
                 <AvInput name="last_name" type="text" id="last_name" placeholder="Zadejte příjmení"  onChange={event => this.setState({surnameValue: event.target.value})} required />
               </Col>
               <AvFeedback>Špatně zadané příjmení!</AvFeedback>
             </AvGroup>
+>>>>>>> feature/register-update
 
             <FormGroup row>
               <Label for="birthdate" sm={3}>{localizedTexts.registration.birthdate}</Label>
                 <Col sm={9}>
+<<<<<<< HEAD
+                    <Input required type="text" name="birthdate" id="birthdate" placeholder="Zadejte datum narození ve tvaru den/mesic/rok" onChange={event => this.setState({birthdayValue: event.target.value})}/>
+=======
                   <DatePicker  dateFormat="DD/MM/YYYY" selected={this.state.startDate} onChange={this.handleChange} />
+>>>>>>> feature/register-update
                 </Col>
             </FormGroup>
 
             <AvGroup row>
               <Label for="phone_number" sm={3}>{localizedTexts.registration.phone}</Label>
+<<<<<<< HEAD
+                <Col sm={9}>
+                    <Input required type="text" name="phone_number" id="phone_number" placeholder="Zadejte telefon ve tvaru +420123456789" onChange={event => this.setState({phoneValue: event.target.value})}/>
+                </Col>
+            </FormGroup>
+
+
+
+          <Button type="submit">{localizedTexts.registration.register}</Button>
+        </Form>
+=======
               <Col sm={9}>
                 <AvInput name="phone_number" type="text" id="phone_number" minLength="13" maxLength="13" pattern="^[+420]\d{12}" placeholder="Zadejte telefon ve tvaru +420123456789"  onChange={event => this.setState({phoneValue: event.target.value})} required />
               </Col>
@@ -198,6 +275,7 @@ class RegistrationPage extends React.Component {
             </FormGroup>
 
           </AvForm>
+>>>>>>> feature/register-update
         </Col>
       </div>
 

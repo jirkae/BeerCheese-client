@@ -37,13 +37,25 @@ class Product extends Component {
           _package.items.length >= 9 &&
           this.props.product.category !== PACKAGE_CATEGORY_PATH
         ) {
-          alert('Maximální počet produktů v balíčku je 9');
+          this.props.openModal({
+            name: 'alert',
+            data: {
+              type: "danger",
+              message: 'Maximální počet produktů v balíčku je 9'
+            }
+          });
           willInsert = false;
         }
         if (this.props.product.category === PACKAGE_CATEGORY_PATH) {
           _package.items.forEach(item => {
             if (item.category === PACKAGE_CATEGORY_PATH) {
-              alert('V balíčku již máme vybrané balení, pokud ho chcete změnit, nejprve odeberte aktuálně vybrané.');
+              this.props.openModal({
+                name: 'alert',
+                data: {
+                  type: "danger",
+                  message: 'V balíčku již máme vybrané balení, pokud ho chcete změnit, nejprve odeberte aktuálně vybrané.'
+                }
+              });
               willInsert = false;
             }
           });
@@ -67,20 +79,21 @@ class Product extends Component {
         >
           <CardTitle style={{ width: size + 'px' }}>{product.name}</CardTitle>
         </CardBlock>
-        <LazyLoad height={200} once>
+        <LazyLoad height="200px" offset={100} once>
           <img
             width={size}
             src={APP_URL + product.image}
             alt="product"
             style={{ alignSelf: 'center', width: 'auto', maxHeight: '200px' }}
             onClick={() => {
-              openModal({ name: 'productDetails', data: {
-                ...product,
-                image: APP_URL + product.image
-              }
+              openModal({
+                name: 'productDetails',
+                data: {
+                  ...product,
+                  image: APP_URL + product.image
+                }
               });
-              }
-            }
+            }}
           />
         </LazyLoad>
         <CardBlock>
