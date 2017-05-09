@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {CardDeck} from 'reactstrap';
-import LazyLoad from "react-lazyload";
-import Loading from "../images/Loading";
-import Product from "./Product";
+import { CardDeck } from 'reactstrap';
+import Loading from '../images/Loading';
+import Product from './Product';
 import { connect } from 'react-redux';
 import { productsApi } from '../../actions/products';
 import { isNull } from '../../util/util';
@@ -23,7 +22,7 @@ class ProductList extends Component {
   fetchItems(categoryId) {
     let config = {};
     if (typeof categoryId !== 'undefined' && !isNull(categoryId)) {
-      config = {params: {category: categoryId}};
+      config = { params: { category: categoryId } };
     }
     this.props.productsApi(config);
   }
@@ -36,11 +35,20 @@ class ProductList extends Component {
 
     if (!isNull(products) && products.length) {
       return products.map(({ product }) => (
-        <LazyLoad placeholder={<Loading />} key={product.id} height="50px">
-          <Product product={product} size={this.props.itemSize} 
-            addCartButton={this.props.addCartButton === undefined ? false : this.props.addCartButton}
-            currentPackage={this.props.currentPackage === undefined ? false : this.props.currentPackage} />
-        </LazyLoad>
+        <Product
+          product={product}
+          size={this.props.itemSize}
+          addCartButton={
+            this.props.addCartButton === undefined
+              ? false
+              : this.props.addCartButton
+          }
+          currentPackage={
+            this.props.currentPackage === undefined
+              ? false
+              : this.props.currentPackage
+          }
+        />
       ));
     }
   }

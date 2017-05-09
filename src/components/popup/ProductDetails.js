@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  ModalBody,
-  Row,
-  Col,
-  ModalHeader
-} from 'reactstrap';
+import { Modal, ModalBody, Row, Col, ModalHeader } from 'reactstrap';
 import localizedTexts from '../../text_localization/LocalizedStrings';
 
 export default props => {
@@ -14,7 +8,7 @@ export default props => {
       <ModalHeader><h3>{props.data.name}</h3></ModalHeader>
       <ModalBody>
         <Row>
-          <Col>
+          <Col className="text-center">
             <img
               className="img-fluid"
               src={props.data.image}
