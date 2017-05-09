@@ -128,7 +128,7 @@ class RegistrationPage extends React.Component {
             <FormGroup row>
               <Label for="phone_number" sm={3}>{localizedTexts.registration.phone}</Label>
                 <Col sm={9}>
-                    <Input required type="number" name="phone_number" id="phone_number" placeholder="Zadejte telefon ve tvaru +420123456789" onChange={event => this.setState({phoneValue: event.target.value})}/>
+                    <Input required type="text" name="phone_number" id="phone_number" placeholder="Zadejte telefon ve tvaru +420123456789" onChange={event => this.setState({phoneValue: event.target.value})}/>
                 </Col>
             </FormGroup>
 
